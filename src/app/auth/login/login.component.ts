@@ -36,7 +36,7 @@ export class LoginComponent implements OnInit {
   }
 
   getImage(comp:string,image:string):any{
-    this.api.getImage(comp,`${image}`).subscribe(data=>{
+    this.api.getImage(comp,`${image}.jpeg`).subscribe(data=>{
       return data
     })
   }
