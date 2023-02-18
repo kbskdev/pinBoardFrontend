@@ -10,22 +10,22 @@ export class AppComponent implements OnInit{
   constructor(private api:HttpService) {
   }
   ngOnInit() {
-    this.api.getImage().subscribe(data=>{
-      this.imageFromBlob(data)
-    })
+    // this.api.getImage().subscribe(data=>{
+    //   this.imageFromBlob(data)
+    // })
   }
-  image:any
-
-  imageFromBlob(image:Blob){
-    let reader = new FileReader()
-    reader.addEventListener("load", () => {
-      this.image = reader.result;
-    }, false);
-
-    if (image) {
-      reader.readAsDataURL(image);
-    }
-  }
+  // image:any
+  //
+  // imageFromBlob(image:Blob){
+  //   let reader = new FileReader()
+  //   reader.addEventListener("load", () => {
+  //     this.image = reader.result;
+  //   }, false);
+  //
+  //   if (image) {
+  //     reader.readAsDataURL(image);
+  //   }
+  // }
 
   title = 'pinboardfrontend';
 }

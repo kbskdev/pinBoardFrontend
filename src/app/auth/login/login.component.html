@@ -1,0 +1,27 @@
+<form #loginForm="ngForm" (ngSubmit)="login()" class="form">
+  <p style="color: white;width: 100%;text-align: center">Zaloguj się</p>
+  <mat-form-field>
+    <mat-label>email</mat-label>
+    <input matInput placeholder="username" name="username" type="text" required [(ngModel)]="email"/>
+
+  </mat-form-field>
+
+
+  <mat-form-field>
+    <mat-label>password</mat-label>
+    <input matInput placeholder="password" name="title" type="password" required [(ngModel)]="password"/>
+
+  </mat-form-field>
+
+  <button mat-raised-button color="accent" style="margin-left: 50px;margin-right: 50px" type="submit" [disabled]="loginForm.invalid" type="submit">Zaloguj sie</button>
+</form>
+
+
+<button mat-raised-button (click)="showUserData()">Pokaz dane uztykwonika</button>
+<ng-container *ngIf="userData">
+  siur
+  <p>{{userData.username}}</p>
+  <ul >
+    <li *ngFor="let comp of userData.composition">{{comp._id}}</li>
+  </ul>
+</ng-container>
