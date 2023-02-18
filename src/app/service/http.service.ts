@@ -14,8 +14,8 @@ export class HttpService {
     })
   }
 
-  getImage():Observable<Blob>{
-    return this.http.get('http://localhost:8000/api/v1/posts/getImage/',{responseType:'blob'})
+  getImage(comp:string,image:string):Observable<Blob>{
+    return this.http.get(`http://localhost:8000/api/v1/images/getImage/${comp}/${image}`,{responseType:'blob',headers:this.myHeaders()})
   }
 
   getCompList():Observable<CompListResponse>{

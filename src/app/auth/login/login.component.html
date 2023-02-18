@@ -19,9 +19,11 @@
 
 <button mat-raised-button (click)="showUserData()">Pokaz dane uztykwonika</button>
 <ng-container *ngIf="userData">
-  siur
   <p>{{userData.username}}</p>
   <ul >
-    <li *ngFor="let comp of userData.composition">{{comp._id}}</li>
+    <li *ngFor="let comp of userData.composition">
+      {{comp.name}}
+      <p *ngFor="let image of comp.images"><img [src]="getImage(comp._id,image._id)"></p>
+    </li>
   </ul>
 </ng-container>

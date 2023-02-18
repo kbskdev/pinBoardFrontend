@@ -35,7 +35,11 @@ export class LoginComponent implements OnInit {
     })
   }
 
-  getImage
+  getImage(comp:string,image:string):any{
+    this.api.getImage(comp,`${image}`).subscribe(data=>{
+      return data
+    })
+  }
 
 
   ngOnInit(): void {
