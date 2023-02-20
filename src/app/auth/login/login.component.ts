@@ -28,18 +28,25 @@ export class LoginComponent implements OnInit {
     })
   }
 
-  showUserData(){
-    return this.api.getCompList().subscribe(data=>{
-      this.userData=data.data
-      console.log(this.userData)
-    })
-  }
-
-  getImage(comp:string,image:string):any{
-    this.api.getImage(comp,`${image}.jpeg`).subscribe(data=>{
-      return data
-    })
-  }
+  // showUserData(){
+  //   return this.api.getCompList().subscribe(data=>{
+  //     this.userData=data.data
+  //     console.log(this.userData)
+  //   })
+  // }
+  //
+  // getImage(comp:string,image:string):any{
+  //   this.api.getImage(comp,`${image}.jpeg`).subscribe(data=>{
+  //     let reader = new FileReader()
+  //
+  //     reader.addEventListener('load',()=>{
+  //       console.log(reader.result)
+  //       return reader.result
+  //     })
+  //     reader.readAsDataURL(data)
+  //
+  //   })
+  // }
 
 
   ngOnInit(): void {

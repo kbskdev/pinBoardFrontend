@@ -5,13 +5,16 @@ import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
 import {FormsModule} from "@angular/forms";
 import {MaterialModule} from "../material/material.module";
+import { ShowPhotoDirective } from './login/show-photo.directive';
+
 
 
 
 @NgModule({
   declarations: [
     LoginComponent,
-    RegisterComponent
+    RegisterComponent,
+    ShowPhotoDirective
   ],
   exports: [
     LoginComponent
