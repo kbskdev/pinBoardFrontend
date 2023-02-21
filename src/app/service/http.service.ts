@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import {Observable} from "rxjs";
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {CompListResponse} from "../models/comp-list-response";
+import {OneCompResponse} from "../models/one-comp-response";
 
 @Injectable({
   providedIn: 'root'
@@ -20,6 +21,10 @@ export class HttpService {
 
   getCompList():Observable<CompListResponse>{
     return this.http.get<CompListResponse>('http://localhost:8000/api/v1/images/getCompositionList/',{headers:this.myHeaders()})
+  }
+
+  getOneComp(comp:string):Observable<OneCompResponse>{
+    return this.http.get<OneCompResponse>(`http://localhost:8000/api/v1/images/getOneComp/${comp}`,{headers:this.myHeaders()})
   }
 
   constructor(private http:HttpClient) { }

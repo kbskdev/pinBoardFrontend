@@ -17,13 +17,13 @@
 </form>
 
 
-<button mat-raised-button (click)="showUserData()">Pokaz dane uztykwonika</button>
-<ng-container *ngIf="userData">
-  <p>{{userData.username}}</p>
-  <ul >
-    <li *ngFor="let comp of userData.composition">
-      {{comp.name}}
-      <p *ngFor="let image of comp.images"><img appShowPhoto [comp]="comp._id" [image]="image._id"></p>
-    </li>
-  </ul>
-</ng-container>
+<!--<button mat-raised-button (click)="showUserData()">Pokaz dane uztykwonika</button>-->
+<!--<ng-container *ngIf="userData">-->
+<!--  <p>{{userData.username}}</p>-->
+<!--  <ul >-->
+<!--    <li *ngFor="let comp of userData.composition">-->
+<!--      {{comp.name}}-->
+<!--      <p *ngFor="let image of comp.images"><img appShowPhoto [comp]="comp._id" [image]="image._id"></p>-->
+<!--    </li>-->
+<!--  </ul>-->
+<!--</ng-container>-->
