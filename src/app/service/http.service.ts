@@ -27,5 +27,14 @@ export class HttpService {
     return this.http.get<OneCompResponse>(`http://localhost:8000/api/v1/images/getOneComp/${comp}`,{headers:this.myHeaders()})
   }
 
+  getImagePromise(comp:string,image:string):Promise<Blob>{
+    return new Promise<Blob>((resolve => {
+      this.getImage(comp,image).subscribe(data=>{
+        resolve(data)
+      })
+    }))
+  }
+
+
   constructor(private http:HttpClient) { }
 }
