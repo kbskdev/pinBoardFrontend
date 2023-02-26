@@ -8,6 +8,6 @@ export interface Image {
   type:enumTypes
   position:{x:number,y:number}
   imageBlob?:Blob
-
+  extension:string
   imageObject?:Object
 }
