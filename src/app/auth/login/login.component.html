@@ -1,8 +1,8 @@
 <form #loginForm="ngForm" (ngSubmit)="login()" class="form">
-  <p style="width: 100%;text-align: center;font-size: 30px">Zaloguj się</p>
+  <p style="color: white;width: 100%;text-align: center">Zaloguj się</p>
   <mat-form-field>
     <mat-label>email</mat-label>
-    <input matInput placeholder="email" name="email" type="text" required [(ngModel)]="email"/>
+    <input matInput placeholder="username" name="username" type="text" required [(ngModel)]="email"/>
 
   </mat-form-field>
 
@@ -13,7 +13,17 @@
 
   </mat-form-field>
 
+  <button mat-raised-button color="accent" style="margin-left: 50px;margin-right: 50px" type="submit" [disabled]="loginForm.invalid" type="submit">Zaloguj sie</button>
+</form>
 
-    <button mat-raised-button color="accent" style="margin-left: 15%;margin-right: 15%"
-            type="submit" [disabled]="loginForm.invalid" type="submit">Zaloguj sie</button>
-  </form>
+
+<!--<button mat-raised-button (click)="showUserData()">Pokaz dane uztykwonika</button>-->
+<!--<ng-container *ngIf="userData">-->
+<!--  <p>{{userData.username}}</p>-->
+<!--  <ul >-->
+<!--    <li *ngFor="let comp of userData.composition">-->
+<!--      {{comp.name}}-->
+<!--      <p *ngFor="let image of comp.images"><img appShowPhoto [comp]="comp._id" [image]="image._id"></p>-->
+<!--    </li>-->
+<!--  </ul>-->
+<!--</ng-container>-->

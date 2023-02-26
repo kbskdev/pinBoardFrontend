@@ -32,9 +32,11 @@ export class PhotoCanvasComponent implements OnInit {
   ngOnInit(): void {
     const reader = new FileReader()
     reader.addEventListener('loadend',()=>{
+      //console.log(reader.result)
       let image = new Image()
       image.src = reader.result as string
       this.textureList.push(new PIXI.Texture((new PIXI.BaseTexture(image))))
+      console.log(this.textureList)
       if(this.textureList.length===this.imagesList.length){
         this.textureList.forEach((x,index)=>{
           let photo = new PIXI.Sprite(x)
@@ -51,7 +53,7 @@ export class PhotoCanvasComponent implements OnInit {
       this.imagesList = compData.data.composition[0].images
 
       for(let i =0;i<this.imagesList.length;i++){
-        this.imagesList[i].imageBlob=await this.api.getImagePromise(this.compId, `${this.imagesList[i]._id}.${this.imagesList[i].extension}`)
+        this.imagesList[i].imageBlob=await this.api.getImagePromise(this.compId, `${this.imagesList[i]._id}.jpeg`)
 
           if(reader.readyState!=1){
             reader.readAsDataURL(this.imagesList[i].imageBlob!)

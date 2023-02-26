@@ -16,10 +16,9 @@ import { ShowPhotoDirective } from './login/show-photo.directive';
     RegisterComponent,
     ShowPhotoDirective
   ],
-    exports: [
-        LoginComponent,
-        RegisterComponent
-    ],
+  exports: [
+    LoginComponent
+  ],
   imports: [
     CommonModule, FormsModule,MaterialModule
   ]
