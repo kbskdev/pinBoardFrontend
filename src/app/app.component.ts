@@ -10,22 +10,14 @@ export class AppComponent implements OnInit{
   constructor(private api:HttpService) {
   }
   ngOnInit() {
-    // this.api.getImage().subscribe(data=>{
-    //   this.imageFromBlob(data)
-    // })
+    console.log(this.isLogged)
+    console.log(localStorage.getItem('user'))
   }
   image:any
 
-  imageFromBlob(image:Blob){
-    let reader = new FileReader()
-    reader.addEventListener("load", () => {
-      this.image = reader.result;
-    }, false);
+  isLogged:boolean = localStorage.getItem('user') != ('' || undefined)
 
-    if (image) {
-      reader.readAsDataURL(image);
-    }
-  }
+
 
   title = 'pinboardfrontend';
 }

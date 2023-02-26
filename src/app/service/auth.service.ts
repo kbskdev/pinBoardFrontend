@@ -12,4 +12,8 @@ export class AuthService {
   login(email:string,password:string):Observable<any>{
     return this.http.post('http://localhost:8000/api/v1/users/login/',{email:email,password:password})
   }
+
+  register(username:string,email:string,password:string):Observable<any>{
+    return this.http.post('http://localhost:8000/api/v1/users/register/',{username:username,email:email,password:password})
+  }
 }
