@@ -1,20 +1,29 @@
 :host{
-  width: 40%;
+  width: 60%;
   height: 40%;
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #dcdcdc;
+  background-color: rgb(113, 168, 215);
   border-radius: 20px;
   flex-wrap: wrap;
+
+  -webkit-box-shadow: 0px 0px 15px -5px rgba(66, 68, 90, 1);
+  -moz-box-shadow: 0px 0px 15px -5px rgba(66, 68, 90, 1);
+  box-shadow: 0px 0px 15px -5px rgba(66, 68, 90, 1);
 }
 mat-form-field{
   width: 51%;
 }
+mat-label{
+  color: gainsboro!important;
+}
+
 form{
   display: flex;
   justify-content: center;
   align-items: center;
   width: 80%;
   flex-direction: column;
+  color: gainsboro;
 }

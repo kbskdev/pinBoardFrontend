@@ -5,5 +5,5 @@ export interface Composition {
   name:string
   tags:[string]
   votes:number,
-  images:[Image]
+  images:Image[]
 }

@@ -1,0 +1,5 @@
+<p style="font-size: 30px;position: absolute;top:10%">Twoje tablice, {{username}}:</p>
+
+  <button mat-raised-button color="primary" *ngFor="let comp of compositions" (click)="goToComp(comp._id)">
+    {{comp.name}}
+  </button>

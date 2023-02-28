@@ -1,7 +1,8 @@
-import {Component, ElementRef, Input, OnInit} from '@angular/core';
+import {Component, ElementRef, OnInit} from '@angular/core';
 import * as PIXI from 'pixi.js'
 import {HttpService} from "../../service/http.service";
 import {Image} from "../../models/image";
+import {ActivatedRoute} from "@angular/router";
 
 @Component({
   selector: 'app-photo-canvas',
@@ -10,12 +11,14 @@ import {Image} from "../../models/image";
 })
 export class PhotoCanvasComponent implements OnInit {
 
-  constructor(private el:ElementRef, private api:HttpService) { }
+  constructor(private el:ElementRef, private api:HttpService, private route:ActivatedRoute) {
+    this.compId = this.route.snapshot.queryParamMap.get('id')!
+  }
 
 
-  app:PIXI.Application = new PIXI.Application({width:this.el.nativeElement.offsetWidth,height:this.el.nativeElement.offsetHeight,transparent:false})
+  app:PIXI.Application
 
-  @Input() compId:string
+  compId:string
 
   blank:Image
 
@@ -30,11 +33,15 @@ export class PhotoCanvasComponent implements OnInit {
   // }
 
   ngOnInit(): void {
+    this.app = new PIXI.Application({width:this.el.nativeElement.offsetWidth,height:this.el.nativeElement.offsetHeight})
+
     const reader = new FileReader()
     reader.addEventListener('loadend',()=>{
       let image = new Image()
       image.src = reader.result as string
+
       this.textureList.push(new PIXI.Texture((new PIXI.BaseTexture(image))))
+
       if(this.textureList.length===this.imagesList.length){
         this.textureList.forEach((x,index)=>{
           let photo = new PIXI.Sprite(x)

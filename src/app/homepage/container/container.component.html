@@ -1,0 +1,11 @@
+<div  class="container">
+  <app-logged *ngIf="isLogged"></app-logged>
+  <div *ngIf="!isLogged" class="left">
+    <app-login></app-login>
+    <app-register></app-register>
+  </div>
+
+  <div class="right">
+    <div class="text">PinBoard Project</div>
+  </div>
+</div>
