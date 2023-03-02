@@ -1,4 +1,6 @@
+
 <p style="font-size: 30px;position: absolute;top:10%">Twoje tablice, {{username}}:</p>
+<button style="font-size: 15px;position: absolute;top:5%" mat-raised-button color="primary" (click)="logout()">Wyloguj sie</button>
 
   <button mat-raised-button color="primary" *ngFor="let comp of compositions" (click)="goToComp(comp._id)">
     {{comp.name}}

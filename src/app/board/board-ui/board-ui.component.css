@@ -1,0 +1,33 @@
+:host{
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 20;
+}
+.navbar{
+  width: 100%;
+  height: 35px;
+  background-color: rgba(255, 255, 255, 1);
+  display: flex;
+  justify-content: space-evenly;
+  padding-bottom: 10px;
+  padding-top: 10px;
+  z-index: 3;
+}
+.editMode{
+  position: absolute;
+  right: 0;
+  top: 6vh;
+  width: 25%;
+  height: 94vh;
+  background-color: rgb(210, 210, 210);
+  z-index: -1;
+  display: flex;
+  align-content: space-around;
+  justify-content: center;
+}
+.dropzone{
+  height: 25%;
+}

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {HttpService} from "../../service/http.service";
 import {Composition} from "../../models/composition";
 import {Router} from "@angular/router";
@@ -23,6 +23,14 @@ export class LoggedComponent implements OnInit {
       console.log(this.compositions)
     })
   }
+
+  logout(){
+    localStorage.clear()
+    this.loggedCheck.emit()
+  }
+
+  @Output()
+  loggedCheck = new EventEmitter<string>()
 
   goToComp(id:string){
     this.router.navigate(['board'],{queryParams:{id:`${id}`}})

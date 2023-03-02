@@ -9,5 +9,4 @@ export interface Image {
   position:{x:number,y:number}
   imageBlob?:Blob
   extension:string
-  imageObject?:Object
 }

@@ -3,6 +3,8 @@ import * as PIXI from 'pixi.js'
 import {HttpService} from "../../service/http.service";
 import {Image} from "../../models/image";
 import {ActivatedRoute} from "@angular/router";
+import {BoardService} from "../../service/board.service";
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-photo-canvas',
@@ -11,7 +13,7 @@ import {ActivatedRoute} from "@angular/router";
 })
 export class PhotoCanvasComponent implements OnInit {
 
-  constructor(private el:ElementRef, private api:HttpService, private route:ActivatedRoute) {
+  constructor(private el:ElementRef, private api:HttpService, private route:ActivatedRoute, private boardService:BoardService) {
     this.compId = this.route.snapshot.queryParamMap.get('id')!
   }
 
@@ -20,25 +22,24 @@ export class PhotoCanvasComponent implements OnInit {
 
   compId:string
 
-  blank:Image
-
   imagesList = new Array<Image>()
 
   textureList = new Array<PIXI.Texture>()
 
-  // fileRead(blob:Blob):Promise<string>{
-  //   return new Promise<string>((resolve => {
-  //
-  //   }))
-  // }
 
   ngOnInit(): void {
     this.app = new PIXI.Application({width:this.el.nativeElement.offsetWidth,height:this.el.nativeElement.offsetHeight})
+
+
+    this.boardService.fileObserver.subscribe(data=>{
+      
+    })
 
     const reader = new FileReader()
     reader.addEventListener('loadend',()=>{
       let image = new Image()
       image.src = reader.result as string
+
 
       this.textureList.push(new PIXI.Texture((new PIXI.BaseTexture(image))))
 

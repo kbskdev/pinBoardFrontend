@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, HostListener, OnInit} from '@angular/core';
 
 @Component({
   selector: 'app-container',
@@ -11,7 +11,16 @@ export class ContainerComponent implements OnInit {
   }
   ngOnInit() {
     this.isLogged = localStorage.getItem('user') != ('' || undefined)
+
   }
+
+  @HostListener('loggedCheck')
+  loggedCheck(){
+    this.isLogged = localStorage.getItem('user') != ('' || undefined)
+    console.log(localStorage)
+  }
+
+
 
   isLogged:boolean = false
 }
