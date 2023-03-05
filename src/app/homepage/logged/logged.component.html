@@ -5,3 +5,12 @@
   <button mat-raised-button color="primary" *ngFor="let comp of compositions" (click)="goToComp(comp._id)">
     {{comp.name}}
   </button>
+
+<form #compform= "ngForm" class="newCompForm" (ngSubmit)="addComp()">
+  <p class="formHeader">Dodaj kompozycje</p>
+  <mat-form-field>
+    <mat-label>Nazwa kompozycji</mat-label>
+    <input matInput placeholder="nazwa" name="compName" type="text" required [(ngModel)]="compName">
+  </mat-form-field>
+  <button mat-raised-button color="primary" type="submit">Dodaj kompozycje</button>
+</form>

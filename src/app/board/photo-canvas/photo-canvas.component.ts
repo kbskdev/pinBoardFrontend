@@ -18,11 +18,13 @@ export class PhotoCanvasComponent implements OnInit {
 
   dragPhotoMode = false
   addPhotoMode = false
+  deletePhotoMode = false
 
   goBack(){
     this.router.navigate([''])
   }
   changeAddPhotoMode(){
+    this.deletePhotoMode = false
     this.addPhotoMode = !this.addPhotoMode
     this.dragPhotoMode = !this.dragPhotoMode
     if(!this.addPhotoMode){
@@ -34,6 +36,12 @@ export class PhotoCanvasComponent implements OnInit {
       this.newImage = undefined as unknown as PIXI.Sprite
       this.newImageFile = undefined as unknown as File
     }
+  }
+
+  changeDeletePhotoMode(){
+    this.deletePhotoMode = !this.deletePhotoMode
+    this.addPhotoMode = false
+    this.dragPhotoMode = false
   }
 
   sendPhoto(){
@@ -96,12 +104,22 @@ export class PhotoCanvasComponent implements OnInit {
     })
 
     this.app.renderer.view.onmousedown = (e:any) =>{
+      console.log(e)
       for(let i=0;i<this.spriteList.length;i++){
         if(
           (e.clientX>this.spriteList[i].x)&&(e.clientY>this.spriteList[i].y)&&
           (e.clientX<this.spriteList[i].x+this.spriteList[i].width)&&
           (e.clientY<this.spriteList[i].y+this.spriteList[i].height)){
-          this.pressedImage = {imageIndex: i,mouseY:e.clientY,mouseX:e.clientX,imageX:e.clientX-this.spriteList[i].x,imageY:e.clientY-this.spriteList[i].y}
+          if(this.deletePhotoMode){
+            this.spriteList[i].parent.removeChild(this.spriteList[i])
+            this.spriteList.splice(i,1)
+            console.log(this.spriteList)
+            this.api.deleteImage(this.compId,`${this.imagesList[i]._id}.${this.imagesList[i].extension}`).subscribe()
+            break
+          }
+          else {
+            this.pressedImage = {imageIndex: i,mouseY:e.clientY,mouseX:e.clientX,imageX:e.clientX-this.spriteList[i].x,imageY:e.clientY-this.spriteList[i].y}
+          }
         }
       }
     }

@@ -1,7 +1,11 @@
 <div class="navbar">
   <button class="button" color="primary" mat-raised-button (click)="goBack()">Powrot</button>
-  <button class="button" color="primary" mat-raised-button (click)="changeAddPhotoMode()">{{addPhotoMode?"Jednak nie":"Dodaj zdjecie"}}</button>
-  <button class="button" color="primary" [disabled]="newImage==undefined" mat-raised-button (click)="sendPhoto()">Wyślij zdjęcie</button>
+  <div>
+    <button style="margin-right: 10px" class="button" color="primary" mat-raised-button (click)="changeAddPhotoMode()">{{addPhotoMode?"Jednak nie":"Dodaj zdjecie"}}</button>
+    <button class="button" color="primary" [disabled]="newImage==undefined" mat-raised-button (click)="sendPhoto()">Wyślij zdjęcie</button>
+  </div>
+  <button [disabled]="newImage!=undefined" style="margin-right: 10px" class="button" color="warn" mat-raised-button (click)="changeDeletePhotoMode()">{{deletePhotoMode?"Już nie":"Usuwaj zdjęcia"}}</button>
+
 </div>
 <div *ngIf="dragPhotoMode" (droppedFile)="readNewPhoto($event)" class="dropzone" appDragndrop>
   <div class="centered">Drop your file here!</div>
