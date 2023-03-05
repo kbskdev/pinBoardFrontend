@@ -3,6 +3,7 @@ import {Observable} from "rxjs";
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {CompListResponse} from "../models/comp-list-response";
 import {OneCompResponse} from "../models/one-comp-response";
+import {Image} from "../models/image";
 
 @Injectable({
   providedIn: 'root'
@@ -33,6 +34,13 @@ export class HttpService {
         resolve(data)
       })
     }))
+  }
+
+  addImage(comp:string,body:FormData):Observable<{status:string,data:Image}>{
+    return this.http.post<{status:string,data:Image}>(`http://localhost:8000/api/v1/images/addImage/${comp}`,body,{headers:this.myHeaders()})
+  }
+  updateImagePosition(comp:string,image:string,x:number,y:number):Observable<any>{
+    return this.http.patch<any>(`http://localhost:8000/api/v1/images/updateImagePosition/${comp}/${image}/${x}/${y}`,{},{headers:this.myHeaders()})
   }
 
 

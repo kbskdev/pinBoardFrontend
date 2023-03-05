@@ -2,9 +2,8 @@ import {Component, ElementRef, OnInit} from '@angular/core';
 import * as PIXI from 'pixi.js'
 import {HttpService} from "../../service/http.service";
 import {Image} from "../../models/image";
-import {ActivatedRoute} from "@angular/router";
-import {BoardService} from "../../service/board.service";
-import { Subject } from 'rxjs';
+import {ActivatedRoute, Router} from "@angular/router";
+
 
 @Component({
   selector: 'app-photo-canvas',
@@ -13,70 +12,129 @@ import { Subject } from 'rxjs';
 })
 export class PhotoCanvasComponent implements OnInit {
 
-  constructor(private el:ElementRef, private api:HttpService, private route:ActivatedRoute, private boardService:BoardService) {
+  constructor(private el:ElementRef, private api:HttpService, private route:ActivatedRoute,private router:Router) {
     this.compId = this.route.snapshot.queryParamMap.get('id')!
   }
 
+  dragPhotoMode = false
+  addPhotoMode = false
 
-  app:PIXI.Application
+  goBack(){
+    this.router.navigate([''])
+  }
+  changeAddPhotoMode(){
+    this.addPhotoMode = !this.addPhotoMode
+    this.dragPhotoMode = !this.dragPhotoMode
+    if(!this.addPhotoMode){
+      this.dragPhotoMode = false
+    }
+    if(this.newImage){
+      this.newImage.parent.removeChild(this.newImage)
+      this.spriteList.pop()
+      this.newImage = undefined as unknown as PIXI.Sprite
+      this.newImageFile = undefined as unknown as File
+    }
+  }
+
+  sendPhoto(){
+    const formData = new FormData()
+    formData.append('photo',this.newImageFile)
+    formData.append('x', `${this.newImage.x}`)
+    formData.append('y', `${this.newImage.y}`)
+
+    this.api.addImage(this.compId,formData).subscribe(response=>{
+      this.imagesList.push(response.data)
+    })
+    this.newImage = undefined as unknown as PIXI.Sprite
+    this.newImageFile = undefined as unknown as File
+    this.changeAddPhotoMode()
+    console.log(this.imagesList)
+    console.log(this.spriteList)
+  }
 
   compId:string
 
+  app:PIXI.Application
+
+  pressedImage:{imageIndex:number,mouseX:number,mouseY:number,imageX:number,imageY:number}
   imagesList = new Array<Image>()
+  spriteList = new Array<PIXI.Sprite>()
 
-  textureList = new Array<PIXI.Texture>()
+  newImage:PIXI.Sprite
+  newImageFile:File
 
+
+  newPhotoReader:FileReader = new FileReader()
+  readNewPhoto(file:File){
+    this.newImageFile= file
+    this.dragPhotoMode = false
+    this.newPhotoReader.readAsDataURL(file)
+
+  }
 
   ngOnInit(): void {
     this.app = new PIXI.Application({width:this.el.nativeElement.offsetWidth,height:this.el.nativeElement.offsetHeight})
 
+    const initialReader = new FileReader()
+    initialReader.addEventListener('loadend',()=>{
+      this.spriteList.push(new PIXI.Sprite(new PIXI.Texture((new PIXI.BaseTexture( initialReader.result as string)))))
 
-    this.boardService.fileObserver.subscribe(data=>{
-      
+      this.app.stage.addChild(this.spriteList[this.spriteList.length-1])
+      this.spriteList[this.spriteList.length-1].x = this.imagesList[this.spriteList.length-1].position.x
+      this.spriteList[this.spriteList.length-1].y = this.imagesList[this.spriteList.length-1].position.y
+
     })
 
-    const reader = new FileReader()
-    reader.addEventListener('loadend',()=>{
-      let image = new Image()
-      image.src = reader.result as string
+    this.newPhotoReader.addEventListener('loadend',()=>{
+      //let ext = data.split(':')[1].split('/')[1].split(';')[0]
 
+      this.newImage = new PIXI.Sprite(new PIXI.Texture((new PIXI.BaseTexture(this.newPhotoReader.result))))
+      this.newImage.x = this.app.view.width/2; this.newImage.y = this.app.view.height/2
 
-      this.textureList.push(new PIXI.Texture((new PIXI.BaseTexture(image))))
+      this.app.stage.addChild(this.newImage)
+      this.spriteList.push(this.newImage)
+    })
 
-      if(this.textureList.length===this.imagesList.length){
-        this.textureList.forEach((x,index)=>{
-          let photo = new PIXI.Sprite(x)
-          photo.x = this.imagesList[index].position.x
-          photo.y = this.imagesList[index].position.y
-          this.app.stage.addChild(photo)
+    this.app.renderer.view.onmousedown = (e:any) =>{
+      for(let i=0;i<this.spriteList.length;i++){
+        if(
+          (e.clientX>this.spriteList[i].x)&&(e.clientY>this.spriteList[i].y)&&
+          (e.clientX<this.spriteList[i].x+this.spriteList[i].width)&&
+          (e.clientY<this.spriteList[i].y+this.spriteList[i].height)){
+          this.pressedImage = {imageIndex: i,mouseY:e.clientY,mouseX:e.clientX,imageX:e.clientX-this.spriteList[i].x,imageY:e.clientY-this.spriteList[i].y}
+        }
+      }
+    }
+    this.app.renderer.view.onmouseup = (e:any) =>{
+      if(this.pressedImage&&!this.newImage){
+        this.api.updateImagePosition(this.compId,
+          `${this.imagesList[this.pressedImage.imageIndex]._id}.${this.imagesList[this.pressedImage.imageIndex].extension}`,
+          this.spriteList[this.pressedImage.imageIndex].position.x,
+          this.spriteList[this.pressedImage.imageIndex].position.y).subscribe(response=>{
+            console.log(response)
         })
       }
-
-    })
+      this.pressedImage = undefined as unknown as {imageIndex:number,mouseX:number,mouseY:number,imageX:number,imageY:number}
+    }
+    this.app.renderer.view.onmousemove = (e:any) =>{
+      if(this.pressedImage){
+        this.spriteList[this.pressedImage.imageIndex].x=e.clientX-this.pressedImage.imageX
+        this.spriteList[this.pressedImage.imageIndex].y=e.clientY-this.pressedImage.imageY
+      }
+    }
 
     this.api.getOneComp(this.compId).subscribe(async( compData)=>{
-
       this.imagesList = compData.data.composition[0].images
+      console.log(this.imagesList)
 
       for(let i =0;i<this.imagesList.length;i++){
         this.imagesList[i].imageBlob=await this.api.getImagePromise(this.compId, `${this.imagesList[i]._id}.${this.imagesList[i].extension}`)
-
-          if(reader.readyState!=1){
-            reader.readAsDataURL(this.imagesList[i].imageBlob!)
+          if(initialReader.readyState!=1){
+            initialReader.readAsDataURL(this.imagesList[i].imageBlob!)
           }
-          else {
-            i=i-1
-          }
+          else {i--}
       }
     })
 
-
-
-
-
     this.el.nativeElement.appendChild(this.app.view)
-
-
-  }
-
-}
+  }}

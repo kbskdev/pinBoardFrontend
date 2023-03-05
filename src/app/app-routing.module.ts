@@ -1,11 +1,11 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import {ContainerComponent} from "./homepage/container/container.component";
-import {BoardContainerComponent} from "./board/board-container/board-container.component";
+import {PhotoCanvasComponent} from "./board/photo-canvas/photo-canvas.component";
 
 const routes: Routes = [
   { path: '', component:  ContainerComponent},
-  { path:'board',component:BoardContainerComponent}
+  { path:'board',component:PhotoCanvasComponent}
 ];
 
 @NgModule({
