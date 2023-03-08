@@ -8,15 +8,14 @@ import {HttpService} from "../../service/http.service";
   styleUrls: ['./register.component.css']
 })
 export class RegisterComponent implements OnInit {
-  constructor(private auth:AuthService,private api:HttpService) { }
+  constructor(private auth:AuthService) { }
 
   username:string = ''
-  email:string = ''
   password:string = ''
 
 
   register(){
-    this.auth.register(this.username,this.email,this.password).subscribe(data=>{
+    this.auth.register(this.username,this.password).subscribe(data=>{
       localStorage.setItem('token',data.token)
       localStorage.setItem('user',data.data.username)
     })
