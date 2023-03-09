@@ -18,16 +18,19 @@
   display: flex;
   height: 90%;
   width: 50%;
+  min-width: 600px;
+  min-height: 600px;
   justify-content:center ;
   align-items: center;
   flex-wrap: wrap;
 }
 .right{
   display: flex;
-  height: 90%;
+  height: 10%;
   width: 50%;
   justify-content:center ;
   align-items: center;
+  align-content: center;
   flex-wrap: wrap;
 }
 .text{
@@ -36,4 +39,14 @@
   display: flex;
   align-items: center;
   overflow-wrap: break-word;
+}
+.footer{
+  position: absolute;
+  bottom: 4%;
+  right: 7.5%;
+  font-size: 25px;
+  width: 35%;
+  min-width: 200px;
+  height:auto;
+  line-height: 35px;
 }

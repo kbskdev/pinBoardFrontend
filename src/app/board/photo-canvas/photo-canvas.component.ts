@@ -81,7 +81,7 @@ export class PhotoCanvasComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.app = new PIXI.Application({width:this.el.nativeElement.offsetWidth,height:this.el.nativeElement.offsetHeight})
+    this.app = new PIXI.Application({width:this.el.nativeElement.offsetWidth,height:this.el.nativeElement.offsetHeight-45})
 
     const initialReader = new FileReader()
     initialReader.addEventListener('loadend',()=>{
@@ -101,15 +101,16 @@ export class PhotoCanvasComponent implements OnInit {
 
       this.app.stage.addChild(this.newImage)
       this.spriteList.push(this.newImage)
+      this.sendPhoto()
     })
 
     this.app.renderer.view.onmousedown = (e:any) =>{
       console.log(e)
       for(let i=0;i<this.spriteList.length;i++){
         if(
-          (e.clientX>this.spriteList[i].x)&&(e.clientY>this.spriteList[i].y)&&
-          (e.clientX<this.spriteList[i].x+this.spriteList[i].width)&&
-          (e.clientY<this.spriteList[i].y+this.spriteList[i].height)){
+          (e.offsetX>this.spriteList[i].x)&&(e.offsetY>this.spriteList[i].y)&&
+          (e.offsetX<this.spriteList[i].x+this.spriteList[i].width)&&
+          (e.offsetY<this.spriteList[i].y+this.spriteList[i].height)){
           if(this.deletePhotoMode){
             this.spriteList[i].parent.removeChild(this.spriteList[i])
             this.spriteList.splice(i,1)

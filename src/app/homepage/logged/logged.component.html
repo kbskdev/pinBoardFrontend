@@ -1,16 +1,16 @@
 
-<p style="font-size: 30px;position: absolute;top:10%">Twoje tablice, {{username}}:</p>
-<button style="font-size: 15px;position: absolute;top:5%" mat-raised-button color="primary" (click)="logout()">Wyloguj sie</button>
+<p style="font-size: 30px;position: absolute;top:10%">Your board Mr/Mrs {{username}}:</p>
+<button style="font-size: 15px;position: absolute;top:5%" mat-raised-button color="primary" (click)="logout()">Logout</button>
 
   <button mat-raised-button color="primary" *ngFor="let comp of compositions" (click)="goToComp(comp._id)">
     {{comp.name}}
   </button>
 
 <form #compform= "ngForm" class="newCompForm" (ngSubmit)="addComp()">
-  <p class="formHeader">Dodaj kompozycje</p>
+  <p class="formHeader">Add board</p>
   <mat-form-field>
     <mat-label>Nazwa kompozycji</mat-label>
-    <input matInput placeholder="nazwa" name="compName" type="text" required [(ngModel)]="compName">
+    <input matInput placeholder="name of the board" name="compName" type="text" required [(ngModel)]="compName">
   </mat-form-field>
-  <button mat-raised-button color="primary" type="submit">Dodaj kompozycje</button>
+  <button mat-raised-button color="primary" type="submit">add board</button>
 </form>

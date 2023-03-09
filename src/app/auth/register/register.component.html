@@ -1,5 +1,5 @@
 <form #registerForm="ngForm" (ngSubmit)="register()" class="form">
-  <p style="color: white;width: 100%;text-align: center;font-size: 30px">Zarejestruj się</p>
+  <p style="color: white;width: 100%;text-align: center;font-size: 30px">Register</p>
   <mat-form-field appearance="outline">
     <mat-label>username</mat-label>
     <input matInput placeholder="username" name="username" type="text" required [(ngModel)]="username"/>
@@ -12,5 +12,5 @@
 
   </mat-form-field>
 
-  <button mat-raised-button color="primary" style="margin-left: 50px;margin-right: 50px" type="submit">Zarejestruj sie</button>
+  <button mat-raised-button color="primary" style="margin-left: 50px;margin-right: 50px" type="submit">Register</button>
 </form>
