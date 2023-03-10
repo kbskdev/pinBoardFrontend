@@ -1,4 +1,4 @@
-import {Component, ElementRef, OnInit} from '@angular/core';
+import {Component, ElementRef, HostListener, OnInit} from '@angular/core';
 import * as PIXI from 'pixi.js'
 import {HttpService} from "../../service/http.service";
 import {Image} from "../../models/image";
@@ -80,8 +80,17 @@ export class PhotoCanvasComponent implements OnInit {
 
   }
 
+  @HostListener('mousewheel', ['$event'])
+  resize(e:any){
+  }
+
   ngOnInit(): void {
+
+
+
     this.app = new PIXI.Application({width:this.el.nativeElement.offsetWidth,height:this.el.nativeElement.offsetHeight-45})
+
+
 
     const initialReader = new FileReader()
     initialReader.addEventListener('loadend',()=>{

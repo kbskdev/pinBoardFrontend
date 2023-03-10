@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {AuthService} from "../../service/auth.service";
 import {HttpService} from "../../service/http.service";
 
@@ -16,10 +16,17 @@ export class RegisterComponent implements OnInit {
 
   register(){
     this.auth.register(this.username,this.password).subscribe(data=>{
-      localStorage.setItem('token',data.token)
       localStorage.setItem('user',data.data.username)
+      this.auth.login(this.username,this.password).subscribe(data=>{
+        localStorage.setItem('token',data.token)
+        this.loggedCheck.emit()
+      })
+
     })
   }
+
+  @Output()
+  loggedCheck = new EventEmitter<string>()
 
   ngOnInit(): void {
   }

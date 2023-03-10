@@ -10,7 +10,7 @@ import {Image} from "../models/image";
 })
 export class HttpService {
 
-  domain  = 'kbskdev.com'
+  domain  = 'localhost:8000'
 
   myHeaders():HttpHeaders {
     return new HttpHeaders({

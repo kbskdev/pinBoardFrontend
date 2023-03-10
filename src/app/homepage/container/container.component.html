@@ -2,7 +2,7 @@
   <app-logged (loggedCheck)="loggedCheck()" *ngIf="isLogged"></app-logged>
   <div *ngIf="!isLogged" class="left">
     <app-login (loggedCheck)="loggedCheck()"></app-login>
-    <app-register></app-register>
+    <app-register (loggedCheck)="loggedCheck()"></app-register>
   </div>
 
   <div class="right">
