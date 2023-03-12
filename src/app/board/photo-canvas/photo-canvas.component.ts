@@ -49,15 +49,16 @@ export class PhotoCanvasComponent implements OnInit {
     formData.append('photo',this.newImageFile)
     formData.append('x', `${this.newImage.x}`)
     formData.append('y', `${this.newImage.y}`)
-
+    console.log(`sendPhoto: x:${this.newImage.x}, y:${this.newImage.y} `)
     this.api.addImage(this.compId,formData).subscribe(response=>{
       this.imagesList.push(response.data)
     })
     this.newImage = undefined as unknown as PIXI.Sprite
     this.newImageFile = undefined as unknown as File
+    this.newImagePosition = undefined as unknown as {x:number,y:number}
     this.changeAddPhotoMode()
-    console.log(this.imagesList)
-    console.log(this.spriteList)
+    // console.log(this.imagesList)
+    // console.log(this.spriteList)
   }
 
   compId:string
@@ -72,28 +73,48 @@ export class PhotoCanvasComponent implements OnInit {
 
   newImage:PIXI.Sprite
   newImageFile:File
+  newImagePosition:{x:number,y:number}
 
 
   newPhotoReader:FileReader = new FileReader()
-  readNewPhoto(file:File){
+  readNewPhoto(file:File,x:number,y:number){
+
+    this.newImagePosition = {x:x+this.mainContainer.x,y:y+this.mainContainer.y}
+    console.log(this.newImagePosition)
+
     this.newImageFile= file
     this.dragPhotoMode = false
     this.newPhotoReader.readAsDataURL(file)
 
   }
 
-  @HostListener('mousewheel', ['$event'])
-  resize(e:any){
-  }
+  // @HostListener('mousewheel', ['$event'])
+  // resize(e:any){
+  //   if(e.wheelDelta>0) {
+  //     this.mainContainer.scale.set(this.mainContainer.scale._x + 0.07)
+  //   }
+  //   if(e.wheelDelta<0){
+  //     this.mainContainer.scale.set(this.mainContainer.scale._x - 0.07)
+  //   }
+  // }
 
   ngOnInit(): void {
-
-
-
     this.app = new PIXI.Application({width:this.el.nativeElement.offsetWidth,height:this.el.nativeElement.offsetHeight-45})
     this.mainContainer = new PIXI.Container()
     this.app.stage.addChild(this.mainContainer)
 
+    this.api.getOneComp(this.compId).subscribe(async( compData)=>{
+      this.imagesList = compData.data.composition[0].images
+      console.log(this.imagesList)
+
+      for(let i =0;i<this.imagesList.length;i++){
+        this.imagesList[i].imageBlob=await this.api.getImagePromise(this.compId, `${this.imagesList[i]._id}.${this.imagesList[i].extension}`)
+        if(initialReader.readyState!=1){
+          initialReader.readAsDataURL(this.imagesList[i].imageBlob!)
+        }
+        else {i--}
+      }
+    })
 
     const initialReader = new FileReader()
     initialReader.addEventListener('loadend',()=>{
@@ -105,19 +126,24 @@ export class PhotoCanvasComponent implements OnInit {
 
     })
 
-    this.newPhotoReader.addEventListener('loadend',()=>{
+    this.newPhotoReader.addEventListener('loadend',async()=>{
       //let ext = data.split(':')[1].split('/')[1].split(';')[0]
 
       this.newImage = new PIXI.Sprite(new PIXI.Texture((new PIXI.BaseTexture(this.newPhotoReader.result))))
-      this.newImage.x = this.app.view.width/2; this.newImage.y = this.app.view.height/2
 
-      this.mainContainer.addChild(this.newImage)
-      this.spriteList.push(this.newImage)
-      this.sendPhoto()
+      await this.mainContainer.addChild(this.newImage)
+      setTimeout(()=>{
+        console.log(`szerokosc: ${this.newImage.width}, wysokosc: ${this.newImage.height}`)
+        this.newImage.x = this.newImagePosition.x-(this.newImage.width/2) - this.mainContainer.x*2
+        this.newImage.y = this.newImagePosition.y-this.newImage.height/2- this.mainContainer.y*2
+
+        this.spriteList.push(this.newImage)
+        this.sendPhoto()
+      },1)
+
     })
 
     this.app.renderer.view.onmousedown = (e:any) =>{
-      console.log(this.mainContainer.x)
       for(let i=0;i<this.spriteList.length;i++){
         if(
           (e.offsetX>this.spriteList[i].x+this.mainContainer.x)&&(e.offsetY>this.spriteList[i].y+this.mainContainer.y)&&
@@ -126,7 +152,7 @@ export class PhotoCanvasComponent implements OnInit {
           if(this.deletePhotoMode){
             this.spriteList[i].parent.removeChild(this.spriteList[i])
             this.spriteList.splice(i,1)
-            console.log(this.spriteList)
+            //console.log(this.spriteList)
             this.api.deleteImage(this.compId,`${this.imagesList[i]._id}.${this.imagesList[i].extension}`).subscribe()
             break
           }
@@ -145,7 +171,7 @@ export class PhotoCanvasComponent implements OnInit {
           `${this.imagesList[this.pressedImage.imageIndex]._id}.${this.imagesList[this.pressedImage.imageIndex].extension}`,
           this.spriteList[this.pressedImage.imageIndex].position.x,
           this.spriteList[this.pressedImage.imageIndex].position.y).subscribe(response=>{
-            console.log(response)
+            //console.log(response)
         })
       }
       this.pressedImage = undefined as unknown as {imageIndex:number,mouseX:number,mouseY:number,imageX:number,imageY:number}
@@ -162,18 +188,7 @@ export class PhotoCanvasComponent implements OnInit {
       }
     }
 
-    this.api.getOneComp(this.compId).subscribe(async( compData)=>{
-      this.imagesList = compData.data.composition[0].images
-      console.log(this.imagesList)
 
-      for(let i =0;i<this.imagesList.length;i++){
-        this.imagesList[i].imageBlob=await this.api.getImagePromise(this.compId, `${this.imagesList[i]._id}.${this.imagesList[i].extension}`)
-          if(initialReader.readyState!=1){
-            initialReader.readAsDataURL(this.imagesList[i].imageBlob!)
-          }
-          else {i--}
-      }
-    })
 
     this.el.nativeElement.appendChild(this.app.view)
   }}

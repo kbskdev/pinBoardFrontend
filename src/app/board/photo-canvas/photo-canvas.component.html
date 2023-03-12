@@ -6,6 +6,6 @@
   <button [disabled]="newImage!=undefined" style="margin-right: 10px" class="button" color="warn" mat-raised-button (click)="changeDeletePhotoMode()">{{deletePhotoMode?"Stop deleting":"Delete photo"}}</button>
 
 </div>
-<div *ngIf="dragPhotoMode" (droppedFile)="readNewPhoto($event)" class="dropzone" appDragndrop>
+<div *ngIf="dragPhotoMode" (droppedFile)="readNewPhoto($event.file,$event.x,$event.y)" class="dropzone" appDragndrop>
   <div class="centered">Drop your file here!</div>
 </div>

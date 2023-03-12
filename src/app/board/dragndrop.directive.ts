@@ -1,5 +1,5 @@
 import {Directive, EventEmitter, HostBinding, HostListener, Output} from '@angular/core';
-import {promises} from "fs";
+
 import {DomSanitizer} from "@angular/platform-browser";
 
 
@@ -10,7 +10,7 @@ export class DragndropDirective {
 
   reader = new FileReader()
 
-  @Output() droppedFile:EventEmitter<File> = new EventEmitter<File>()
+  @Output() droppedFile:EventEmitter<{file:File,x:number,y:number}> = new EventEmitter<{file:File,x:number,y:number}>()
 
   @HostBinding("style.background") private background = "rgba(147,147,147,0.6)";
 
@@ -35,7 +35,7 @@ export class DragndropDirective {
     this.background = "rgba(147,147,147,0.5)";
 
     let file:File = event.dataTransfer!.files[0];
-
-    this.droppedFile.emit(file)
+    console.log(event.clientX)
+    this.droppedFile.emit({file:file,x:event.offsetX,y:event.offsetY})
   }
 }
