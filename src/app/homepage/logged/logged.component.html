@@ -9,8 +9,8 @@
 <form #compform= "ngForm" class="newCompForm" (ngSubmit)="addComp()">
   <p class="formHeader">Add board</p>
   <mat-form-field>
-    <mat-label>composition name</mat-label>
+    <mat-label>board name</mat-label>
     <input matInput placeholder="name of the board" name="compName" type="text" required [(ngModel)]="compName">
   </mat-form-field>
-  <button mat-raised-button color="primary" type="submit">add board</button>
+  <button mat-raised-button color="primary" type="submit" [disabled]="compform.invalid">add board</button>
 </form>

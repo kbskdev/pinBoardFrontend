@@ -1,5 +1,6 @@
 import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {AuthService} from "../../service/auth.service";
+import {catchError, throwError} from "rxjs";
 
 @Component({
   selector: 'app-login',
@@ -13,10 +14,16 @@ export class LoginComponent implements OnInit {
 
   username:string = ''
   password:string = ''
+  loginError:string
+
 
 
   login(){
-    this.auth.login(this.username,this.password).subscribe(data=>{
+    this.auth.login(this.username,this.password).pipe(catchError(err => {
+      this.loginError = "Wrong password or username"
+
+      return throwError(err)}))
+    .subscribe(data=>{
       localStorage.setItem('token',data.token)
       localStorage.setItem('user',data.data.username)
       this.loggedCheck.emit()

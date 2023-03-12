@@ -63,8 +63,10 @@ export class PhotoCanvasComponent implements OnInit {
   compId:string
 
   app:PIXI.Application
+  mainContainer:PIXI.Container
 
   pressedImage:{imageIndex:number,mouseX:number,mouseY:number,imageX:number,imageY:number}
+  pressedCanvas:{mouseX:number,mouseY:number,canvasX:number,canvasY:number}
   imagesList = new Array<Image>()
   spriteList = new Array<PIXI.Sprite>()
 
@@ -89,14 +91,15 @@ export class PhotoCanvasComponent implements OnInit {
 
 
     this.app = new PIXI.Application({width:this.el.nativeElement.offsetWidth,height:this.el.nativeElement.offsetHeight-45})
-
+    this.mainContainer = new PIXI.Container()
+    this.app.stage.addChild(this.mainContainer)
 
 
     const initialReader = new FileReader()
     initialReader.addEventListener('loadend',()=>{
       this.spriteList.push(new PIXI.Sprite(new PIXI.Texture((new PIXI.BaseTexture( initialReader.result as string)))))
 
-      this.app.stage.addChild(this.spriteList[this.spriteList.length-1])
+      this.mainContainer.addChild(this.spriteList[this.spriteList.length-1])
       this.spriteList[this.spriteList.length-1].x = this.imagesList[this.spriteList.length-1].position.x
       this.spriteList[this.spriteList.length-1].y = this.imagesList[this.spriteList.length-1].position.y
 
@@ -108,18 +111,18 @@ export class PhotoCanvasComponent implements OnInit {
       this.newImage = new PIXI.Sprite(new PIXI.Texture((new PIXI.BaseTexture(this.newPhotoReader.result))))
       this.newImage.x = this.app.view.width/2; this.newImage.y = this.app.view.height/2
 
-      this.app.stage.addChild(this.newImage)
+      this.mainContainer.addChild(this.newImage)
       this.spriteList.push(this.newImage)
       this.sendPhoto()
     })
 
     this.app.renderer.view.onmousedown = (e:any) =>{
-      console.log(e)
+      console.log(this.mainContainer.x)
       for(let i=0;i<this.spriteList.length;i++){
         if(
-          (e.offsetX>this.spriteList[i].x)&&(e.offsetY>this.spriteList[i].y)&&
-          (e.offsetX<this.spriteList[i].x+this.spriteList[i].width)&&
-          (e.offsetY<this.spriteList[i].y+this.spriteList[i].height)){
+          (e.offsetX>this.spriteList[i].x+this.mainContainer.x)&&(e.offsetY>this.spriteList[i].y+this.mainContainer.y)&&
+          (e.offsetX<this.spriteList[i].x+this.spriteList[i].width+this.mainContainer.x)&&
+          (e.offsetY<this.spriteList[i].y+this.spriteList[i].height+this.mainContainer.y)){
           if(this.deletePhotoMode){
             this.spriteList[i].parent.removeChild(this.spriteList[i])
             this.spriteList.splice(i,1)
@@ -130,6 +133,9 @@ export class PhotoCanvasComponent implements OnInit {
           else {
             this.pressedImage = {imageIndex: i,mouseY:e.clientY,mouseX:e.clientX,imageX:e.clientX-this.spriteList[i].x,imageY:e.clientY-this.spriteList[i].y}
           }
+        }
+        else {
+          this.pressedCanvas = {mouseY:e.clientY,mouseX:e.clientX,canvasX:e.clientX-this.mainContainer.x,canvasY:e.clientY-this.mainContainer.y}
         }
       }
     }
@@ -143,11 +149,16 @@ export class PhotoCanvasComponent implements OnInit {
         })
       }
       this.pressedImage = undefined as unknown as {imageIndex:number,mouseX:number,mouseY:number,imageX:number,imageY:number}
+      this.pressedCanvas = undefined as unknown as {mouseX:number,mouseY:number,canvasX:number,canvasY:number}
     }
     this.app.renderer.view.onmousemove = (e:any) =>{
       if(this.pressedImage){
         this.spriteList[this.pressedImage.imageIndex].x=e.clientX-this.pressedImage.imageX
         this.spriteList[this.pressedImage.imageIndex].y=e.clientY-this.pressedImage.imageY
+      }
+      else if(this.pressedCanvas){
+        this.mainContainer.x=e.clientX-this.pressedCanvas.canvasX
+        this.mainContainer.y=e.clientY-this.pressedCanvas.canvasY
       }
     }
 

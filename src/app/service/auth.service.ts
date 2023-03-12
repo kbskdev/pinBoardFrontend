@@ -9,7 +9,7 @@ export class AuthService {
 
   constructor(private http:HttpClient) { }
 
-  domain  = 'localhost:8000'
+  domain  = 'kbskdev.com'
 
   login(username:string,password:string):Observable<any>{
     return this.http.post(`http://${this.domain}/api/v1/users/login/`,{username:username,password:password})
