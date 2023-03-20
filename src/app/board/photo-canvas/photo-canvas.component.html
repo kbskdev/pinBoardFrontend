@@ -6,6 +6,32 @@
   <button [disabled]="newImage!=undefined" style="margin-right: 10px" class="button" color="warn" mat-raised-button (click)="changeDeletePhotoMode()">{{deletePhotoMode?"Stop deleting":"Delete photo"}}</button>
 
 </div>
-<div *ngIf="addPhotoMode" (droppedFile)="readNewPhoto($event.file,$event.x,$event.y)" class="dropzone" appDragndrop>
+<div *ngIf="addPhotoMode&&dragPhotoMode" (droppedFile)="readNewPhoto($event.file,$event.x,$event.y)" class="dropzone" appDragndrop>
   <div class="centered">Drop your file here!</div>
+</div>
+<div *ngIf="addPhotoMode" class="photoFormContainer" >
+  <p style="font-size: 30px;width: 100%;text-align: center">Add image</p>
+  <form #photoForm = "ngForm" class="photoForm" (ngSubmit)="sendPhoto()">
+    <mat-form-field appearance="fill">
+      <mat-label>Title</mat-label>
+      <input #title matInput placeholder="title of image" name="title" type="text" maxlength="25" required [(ngModel)]="newImageTitle">
+      <mat-hint align="start">{{title.value.length}}/25</mat-hint>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Date (or anything u want here)</mat-label>
+      <input #date matInput placeholder="dd/mm/yyyy or anything u want" name="description" type="text" maxlength="15" required [(ngModel)]="newImageDate">
+      <mat-hint align="start">{{date.value.length}}/15</mat-hint>
+    </mat-form-field>
+
+
+
+
+    <mat-form-field appearance="fill">
+      <mat-label>Description</mat-label>
+      <input matInput placeholder="description of image" name="description" type="text" required [(ngModel)]="newImageDescription">
+    </mat-form-field>
+
+    <button mat-raised-button color="primary" type="submit" [disabled]="!newImage">Send photo</button>
+  </form>
 </div>

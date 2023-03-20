@@ -32,3 +32,27 @@
 .button{
   width: 120px;
 }
+.photoFormContainer{
+  height: calc(100vh - 45px);
+  width: 25vw;
+  position: absolute;
+  top: 45px;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+background-color: #d7d6d6;
+  z-index: 4;
+  flex-wrap: wrap;
+}
+.photoForm{
+  height: 60%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-content: space-evenly;
+  flex-wrap: wrap;
+}
+.mat-form-field{
+  width: 80%!important;
+}

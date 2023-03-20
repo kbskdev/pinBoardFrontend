@@ -6,4 +6,7 @@ export interface Image {
   imageBlob?:Blob
   imageString?:string
   extension:string
+  date?:Date
+  title:String
+  description:String
 }
