@@ -8,7 +8,7 @@
 .navbar{
   width: 100vw;
   height: 35px;
-  background-color: rgba(255, 255, 255, 1);
+  background-color: rgb(15, 26, 44);
   display: flex;
   justify-content: space-evenly;
   align-content: center;

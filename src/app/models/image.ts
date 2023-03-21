@@ -5,8 +5,8 @@ export interface Image {
   position:{x:number,y:number}
   imageBlob?:Blob
   imageString?:string
-  extension:string
-  date?:Date
-  title:String
-  description:String
+  extension?:string
+  date?:string
+  title?:string
+  description?:string
 }
