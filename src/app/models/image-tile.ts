@@ -1,6 +1,6 @@
 import * as PIXI from "pixi.js";
 import {Image} from "./image";
-import {HttpService} from "../service/http.service";
+
 
 export class ImageTile {
   titleText: PIXI.Text | undefined
@@ -17,6 +17,8 @@ export class ImageTile {
 
   ready = false
 
+  empty = true
+
   private reader = new FileReader()
 
   constructor(imageData:Image) {
@@ -25,62 +27,90 @@ export class ImageTile {
       this.imageSprite.zIndex = 0
       this.container.sortableChildren = true
       this.container.addChild(this.imageSprite)
-      setTimeout(()=>this.createImageTile(),1)
+      this.empty = false
+      this.ready = true
+
+      setTimeout(()=>this.createContainer(),1)
 
     })
     this.imageData = imageData
-    this.reader.readAsDataURL(this.imageData.imageBlob!)
+
+    this.reader.readAsDataURL(this.imageData.imageBlob)
     this.container = new PIXI.Container()
   }
+  private createContainer():void{
 
-  private createImageTile():void{
-    if (this.imageData.title) {
-      this.titleBackground = new PIXI.Sprite()
-      this.titleBackground.width = this.imageSprite.width
-      this.titleBackground.height = 20
-      this.titleBackground.zIndex = 2
+    // this.imageData.position.x -= this.imageSprite.width/2
+    // this.imageData.position.y -= this.imageSprite.height/2
 
-
-      this.titleText = new PIXI.Text(this.imageData.title)
-      //this.titleText.width = this.imageSprite.width - 10
-      this.titleText.zIndex = 3
-      this.titleText.style.fontSize = 16
-      this.titleText.resolution = 2
-      this.container.addChild(this.titleBackground,this.titleText)
-
-      this.titleBackground.y = 0
-      this.titleBackground.x = 0
-      this.titleText.y = 1
-      this.titleText.x = 5
-    }
-    if (this.imageData.date) {
-      this.dateBackground = new PIXI.Sprite()
-      this.dateBackground.width = this.imageSprite.width
-      this.dateBackground.height = 18
-      this.dateBackground.zIndex= 2
-
-      this.dateText = new PIXI.Text(this.imageData.date)
-      //this.dateText.width = this.imageSprite.width
-      this.dateText.zIndex= 3
-      this.dateText.style.fontSize = 14
-      this.dateText.resolution = 2
-      this.container.addChild(this.dateBackground,this.dateText)
-
-      this.dateBackground.y = (this.titleBackground?this.titleBackground.height:0) + this.imageSprite.height - 30
-      this.dateBackground.x = 0
-      this.dateText.y = (this.titleBackground?this.titleBackground.height:0) + this.imageSprite.height
-      this.dateText.x = 3
-    }
-
-    this.imageSprite.y = 20
-    this.ready = true
-  }
-
-  spawnImageTile(container:PIXI.Container):void{
     this.container.x = this.imageData.position.x
     this.container.y = this.imageData.position.y
+    if (this.imageData.title && !this.titleText) {
+      this.createTitleTile()
+    }
+    if (this.imageData.date && !this.dateText) {
+      this.createDateTile()
+    }
 
-    container.addChild(this.container)
+
+
+  }//called when image is downloaded from database
+
+  private createTitleTile(){
+    this.titleText = new PIXI.Text(this.imageData.title!)
+    this.titleText.zIndex = 3
+    this.titleText.style.fontSize = 16
+    this.titleText.resolution = 2
+
+    this.container.addChild(this.titleText)
+
+    this.titleText.y = -this.titleText.style.fontSize - 4
+    this.titleText.x = 5
+    this.empty = false
+  }
+  private deleteTitleTile(){
+    this.container.parent.removeChild(this.titleText!)
+    this.titleText!.parent.removeChild(this.titleText!)
+    this.titleText = undefined as unknown as PIXI.Text
+
+  }
+
+  private createDateTile(){
+    this.dateText = new PIXI.Text(this.imageData.date!)
+    this.dateText.zIndex = 3
+    this.dateText.style.fontSize = 14
+    this.dateText.resolution = 2
+    this.dateText.y = this.imageSprite.height
+    this.dateText.x = 5
+
+    this.container.addChild(this.dateText)
+    this.empty = false
+  }
+  private deleteDateTile(){
+    this.container.parent.removeChild(this.dateText!)
+    this.dateText!.parent.removeChild(this.dateText!)
+    this.dateText = undefined as unknown as PIXI.Text
+  }
+
+  updateTexts():void{
+    if(this.titleText && this.imageData.title) this.titleText.text = this.imageData.title
+
+    else if(this.imageData.title && !this.titleText) this.createTitleTile()
+    else if(this.imageData.title==""&&this.titleText) this.deleteTitleTile()
+
+    if(this.dateText && this.imageData.date) {this.dateText.text = this.imageData.date;console.log("update")}
+
+    else if(this.imageData.date && !this.dateText) this.createDateTile()
+    else if(this.imageData.date==""&&this.dateText) this.deleteDateTile()
+  }//method called on every form changes
+
+
+  loadImage(){
+
+    return new Promise<string>(resolve => {
+      this.reader.onloadend = () => { resolve('')}
+    })
+
 
   }
 

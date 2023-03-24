@@ -56,3 +56,6 @@ background-color: #d7d6d6;
 .mat-form-field{
   width: 80%!important;
 }
+.centered{
+  z-index: -2;
+}
