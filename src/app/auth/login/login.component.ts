@@ -26,6 +26,7 @@ export class LoginComponent implements OnInit {
     .subscribe(data=>{
       localStorage.setItem('token',data.token)
       localStorage.setItem('user',data.data.username)
+      localStorage.setItem('userId',data.data._id)
       this.loggedCheck.emit()
     })
   }

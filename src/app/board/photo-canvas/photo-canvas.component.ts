@@ -3,6 +3,7 @@ import * as PIXI from 'pixi.js'
 import {HttpService} from "../../service/http.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {ImageTile} from "../../models/image-tile";
+import {OneCompResponse} from "../../models/one-comp-response";
 
 
 
@@ -15,8 +16,13 @@ export class PhotoCanvasComponent implements OnInit {
 
   constructor(private el:ElementRef, private api:HttpService, private route:ActivatedRoute,private router:Router) {
     this.compId = this.route.snapshot.queryParamMap.get('id')!
+    this.authorId = this.route.snapshot.queryParamMap.get('userId')!
+
+    console.log(this.authorId)
+    console.log(this.compId)
   }
   compId:string
+  authorId:string
   app:PIXI.Application
   mainContainer:PIXI.Container //container of photos
 
@@ -36,6 +42,9 @@ export class PhotoCanvasComponent implements OnInit {
   newTitle:string
   newDate:string
   newDescription:string
+
+  isAuthor:boolean = false
+  isPublic:boolean = false
 
   //info about added image
 
@@ -68,7 +77,10 @@ export class PhotoCanvasComponent implements OnInit {
       this.newImage = new ImageTile({imageBlob:file,position:{x: x + this.mainContainer.x, y: y + this.mainContainer.y},
         title:this.newTitle,date:this.newDate,description:this.newDescription})
       this.dragPhotoMode = false
+
       this.imageObjectList.push(this.newImage)
+      this.newImage.imageData.title = 'kutas'
+      console.log(this.imageObjectList)
 
       await this.imageObjectList[this.imageObjectList.length - 1].loadImage()
 
@@ -82,8 +94,11 @@ export class PhotoCanvasComponent implements OnInit {
   }//that event is called when dragndrop directive emits event with dropped file
 
   deletePhoto(id:number){
-    this.imageObjectList[id].container.parent.removeChild(this.imageObjectList[id].container)
     this.api.deleteImage(this.compId,`${this.imageObjectList[id].imageData._id}.${this.imageObjectList[id].imageData.extension}`).subscribe()
+
+    this.imageObjectList[id].container.parent.removeChild(this.newImage.container)
+    this.imageObjectList[id].container.destroy({children:true, texture:true, baseTexture:true})
+
     this.imageObjectList.splice(id,1)
   }
 
@@ -113,6 +128,17 @@ export class PhotoCanvasComponent implements OnInit {
 
     }
 
+    async loadImages(compData:OneCompResponse){
+      for (const image of compData.data.composition[0].images){
+
+        const file = await this.api.getImagePromise(this.authorId,this.compId, `${image._id}.${image.extension}`)
+        this.imageObjectList.push(new ImageTile({...image,imageBlob:file}))
+        await this.imageObjectList[this.imageObjectList.length-1].loadImage()
+        this.mainContainer.addChild(this.imageObjectList[this.imageObjectList.length-1].container)
+
+      }
+    }
+
   ngOnInit(): void {
     this.app = new PIXI.Application({
       width:this.el.nativeElement.offsetWidth,
@@ -126,16 +152,18 @@ export class PhotoCanvasComponent implements OnInit {
     this.mainContainer = new PIXI.Container()
     this.app.stage.addChild(this.mainContainer)
 
-    this.api.getOneComp(this.compId).subscribe(async( compData)=>{
-      for (const image of compData.data.composition[0].images){
-        console.log(image)
-        const file = await this.api.getImagePromise(this.compId, `${image._id}.${image.extension}`)
-        this.imageObjectList.push(new ImageTile({...image,imageBlob:file}))
-        await this.imageObjectList[this.imageObjectList.length-1].loadImage()
-        this.mainContainer.addChild(this.imageObjectList[this.imageObjectList.length-1].container)
+    this.api.isAuthor(this.compId).subscribe(result=>{
+      this.isAuthor = result.status
 
-      }
-    })//getting all photos on board
+      this.isAuthor?this.api.getOneComp(this.compId).subscribe(async( compData)=>{
+          await this.loadImages(compData)
+        }
+      ):this.api.getOneCompPublic(this.authorId,this.compId).subscribe(async (compData)=>{
+        await this.loadImages(compData)
+      })
+
+    })
+    //getting all photos on board
 
     this.app.renderer.view.onmousedown = (e:MouseEvent) =>{
       console.log(this.imageObjectList)

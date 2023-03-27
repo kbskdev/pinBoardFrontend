@@ -14,8 +14,8 @@ export class HttpService {
 
 
 
-  getImage(comp:string,image:string):Observable<Blob>{
-    return this.http.get(`http://${this.domain}/api/v1/images/getImage/${comp}/${image}`,{responseType:'blob'})
+  getImagePublic(id:string,comp:string,image:string):Observable<Blob>{
+    return this.http.get(`http://${this.domain}/api/v1/publicImages/getImage/${id}/${comp}/${image}`,{responseType:'blob'})
   }
 
   addComposition(name:string):Observable<any>{
@@ -29,10 +29,13 @@ export class HttpService {
   getOneComp(comp:string):Observable<OneCompResponse>{
     return this.http.get<OneCompResponse>(`http://${this.domain}/api/v1/images/getOneComp/${comp}`)
   }
+  getOneCompPublic(user:string,comp:string):Observable<OneCompResponse>{
+    return this.http.get<OneCompResponse>(`http://${this.domain}/api/v1/publicImages/getOneComp/${user}/${comp}`)
+  }
 
-  getImagePromise(comp:string,image:string):Promise<Blob>{
+  getImagePromise(id:string,comp:string,image:string):Promise<Blob>{
     return new Promise<Blob>((resolve => {
-      this.getImage(comp,image).subscribe(data=>{
+      this.getImagePublic(id,comp,image).subscribe(data=>{
         resolve(data)
       })
     }))
@@ -47,6 +50,10 @@ export class HttpService {
 
   deleteImage(comp:string,image:string):Observable<any>{
     return this.http.delete<any>(`http://${this.domain}/api/v1/images/deleteImage/${comp}/${image}`)
+  }
+
+  isAuthor(comp:string):Observable<{status:boolean}>{
+    return this.http.get<{status:boolean}>(`http://kbskdev.com/api/v1/users/isAuthor/${comp}`)
   }
 
 

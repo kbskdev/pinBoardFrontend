@@ -2,7 +2,6 @@ import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {HttpService} from "../../service/http.service";
 import {Composition} from "../../models/composition";
 import {Router} from "@angular/router";
-import { ChangeDetectorRef } from '@angular/core';
 
 @Component({
   selector: 'app-logged',
@@ -16,6 +15,8 @@ export class LoggedComponent implements OnInit {
   compositions:Array<Composition>
 
   username:string = localStorage.getItem('user')!
+  userId:string = localStorage.getItem('userId')!
+
 
   compName:string
 
@@ -36,7 +37,7 @@ export class LoggedComponent implements OnInit {
   loggedCheck = new EventEmitter<string>()
 
   goToComp(id:string){
-    this.router.navigate(['board'],{queryParams:{id:`${id}`}})
+    this.router.navigate(['board'],{queryParams:{id:`${id}`,userId:this.userId}})
   }
 
   addComp(){
