@@ -26,4 +26,5 @@ form{
   width: 80%;
   flex-direction: column;
   color: gainsboro;
+  flex-wrap: wrap;
 }

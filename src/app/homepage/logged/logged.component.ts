@@ -17,7 +17,7 @@ export class LoggedComponent implements OnInit {
   username:string = localStorage.getItem('user')!
   userId:string = localStorage.getItem('userId')!
 
-
+  public:boolean
   compName:string
 
   ngOnInit(): void {
@@ -41,7 +41,7 @@ export class LoggedComponent implements OnInit {
   }
 
   addComp(){
-    this.api.addComposition(this.compName).subscribe(data=>{
+    this.api.addComposition(this.compName,this.public).subscribe(data=>{
       this.compositions.push(data.compBody)
     })
   }

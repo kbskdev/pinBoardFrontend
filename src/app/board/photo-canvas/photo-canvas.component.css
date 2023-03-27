@@ -59,3 +59,14 @@ background-color: #d7d6d6;
 .centered{
   z-index: -2;
 }
+.fullImage{
+  position: absolute;
+  top: 20%;
+  left: 30%;
+  width: 40%;
+  height: 60%;
+  background-color: burlywood;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

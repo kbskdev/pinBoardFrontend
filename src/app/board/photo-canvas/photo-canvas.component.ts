@@ -46,6 +46,9 @@ export class PhotoCanvasComponent implements OnInit {
   isAuthor:boolean = false
   isPublic:boolean = false
 
+
+  imagedMoved:boolean = false
+  fullImage:boolean = false
   //info about added image
 
   goBack(){
@@ -166,10 +169,9 @@ export class PhotoCanvasComponent implements OnInit {
     //getting all photos on board
 
     this.app.renderer.view.onmousedown = (e:MouseEvent) =>{
-      console.log(this.imageObjectList)
       for(let i=0;i<this.imageObjectList.length;i++){
         if(this.imageObjectList[i].checkCollision(e,this.mainContainer)){//checking if mouse was down on any image
-          if(this.deletePhotoMode){//if user had deleteMode on, deleting an image
+          if(this.deletePhotoMode&&this.isAuthor){//if user had deleteMode on, deleting an image
             this.deletePhoto(i)
             break
           }
@@ -178,29 +180,37 @@ export class PhotoCanvasComponent implements OnInit {
           }
         }
         else {//data used for moving canvas around
+
           this.pressedCanvas = {mouseY:e.clientY,mouseX:e.clientX,canvasX:e.clientX-this.mainContainer.x,canvasY:e.clientY-this.mainContainer.y}
         }
       }
     }//checking if user clicked on canvas or image, deleting image if deletePhoto mode on, saving data of pressed object
 
     this.app.renderer.view.onmouseup = () =>{
-      if(this.pressedImage&&!(this.pressedImage.imageIndex==this.imageObjectList.length-1&&this.newImage)){//updating position of moved image
+      if(this.pressedImage&&!(this.pressedImage.imageIndex==this.imageObjectList.length-1&&this.newImage)&&this.isAuthor){//updating position of moved image
 
+        if(!this.imagedMoved){
+          this.fullImage = true
+        }else{
         this.api.updateImagePosition(this.compId,
           `${this.imageObjectList[this.pressedImage.imageIndex].imageData._id}.${this.imageObjectList[this.pressedImage.imageIndex].imageData.extension}`,
         this.imageObjectList[this.pressedImage.imageIndex].container.x,
-          this.imageObjectList[this.pressedImage.imageIndex].container.y).subscribe()
+          this.imageObjectList[this.pressedImage.imageIndex].container.y).subscribe()}
       }
-
+      else if(this.fullImage){
+        this.fullImage = false
+      }
+      this.imagedMoved = false
       this.pressedImage = undefined as unknown as {imageIndex:number,mouseX:number,mouseY:number,imageX:number,imageY:number}
       this.pressedCanvas = undefined as unknown as {mouseX:number,mouseY:number,canvasX:number,canvasY:number}
     }//updating position of image if moved, clearing data of pressed objects
     this.app.renderer.view.onmousemove = (e:any) =>{
-      if(this.pressedImage){//moving image on canvas
+      if(this.pressedImage&&this.isAuthor){//moving image on canvas
         this.imageObjectList[this.pressedImage.imageIndex].container.x=e.clientX-this.pressedImage.imageX
         this.imageObjectList[this.pressedImage.imageIndex].container.y=e.clientY-this.pressedImage.imageY
         this.imageObjectList[this.pressedImage.imageIndex].imageData.position.x=e.clientX-this.pressedImage.imageX
         this.imageObjectList[this.pressedImage.imageIndex].imageData.position.y=e.clientY-this.pressedImage.imageY
+        this.imagedMoved = true
       }
       else if(this.pressedCanvas){//moving canvas around
         this.mainContainer.x=e.clientX-this.pressedCanvas.canvasX

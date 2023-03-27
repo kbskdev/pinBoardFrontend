@@ -18,8 +18,8 @@ export class HttpService {
     return this.http.get(`http://${this.domain}/api/v1/publicImages/getImage/${id}/${comp}/${image}`,{responseType:'blob'})
   }
 
-  addComposition(name:string):Observable<any>{
-    return this.http.post<any>(`http://${this.domain}/api/v1/images/addComposition/`,{name:name})
+  addComposition(name:string, publicity:boolean):Observable<any>{
+    return this.http.post<any>(`http://${this.domain}/api/v1/images/addComposition/`,{name:name,public:publicity?"public":"private"})
   }
 
   getCompList():Observable<CompListResponse>{
