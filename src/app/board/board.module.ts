@@ -5,13 +5,15 @@ import {MaterialModule} from "../material/material.module";
 import {FormsModule} from "@angular/forms";
 import {MatFileUploadModule} from "angular-material-fileupload";
 import { DragndropDirective } from './dragndrop.directive';
+import { FullImageComponent } from './full-image/full-image.component';
 
 
 
 @NgModule({
   declarations: [
     PhotoCanvasComponent,
-    DragndropDirective
+    DragndropDirective,
+    FullImageComponent
   ],
   exports: [
     PhotoCanvasComponent

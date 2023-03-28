@@ -32,7 +32,7 @@ export class PhotoCanvasComponent implements OnInit {
 
   newPhotoReader:FileReader = new FileReader()
 
-  pressedImage:{imageIndex:number,mouseX:number,mouseY:number,imageX:number,imageY:number}
+  pressedImage:{imageIndex:number,mouseX:number,mouseY:number,imageX:number,imageY:number,initialWidth:number,initialHeight:number}
   pressedCanvas:{mouseX:number,mouseY:number,canvasX:number,canvasY:number} //objects for info about clicked image or mainContainer
 
   imageObjectList = new Array<ImageTile>()
@@ -49,6 +49,7 @@ export class PhotoCanvasComponent implements OnInit {
 
   imagedMoved:boolean = false
   fullImage:boolean = false
+  fullImageData:ImageTile
   //info about added image
 
   goBack(){
@@ -176,7 +177,7 @@ export class PhotoCanvasComponent implements OnInit {
             break
           }
           else {//if deletePhotoMode was off, setting data for moving images around
-            this.pressedImage = {imageIndex: i,mouseY:e.clientY,mouseX:e.clientX,imageX:e.clientX-this.imageObjectList[i].container.x,imageY:e.clientY-this.imageObjectList[i].container.y}
+            this.pressedImage = {imageIndex: i,mouseY:e.clientY,mouseX:e.clientX,imageX:e.clientX-this.imageObjectList[i].container.x,imageY:e.clientY-this.imageObjectList[i].container.y,initialWidth:this.imageObjectList[i].imageSprite.width,initialHeight:this.imageObjectList[i].imageSprite.height}
           }
         }
         else {//data used for moving canvas around
@@ -191,6 +192,7 @@ export class PhotoCanvasComponent implements OnInit {
 
         if(!this.imagedMoved){
           this.fullImage = true
+          this.fullImageData = this.imageObjectList[this.pressedImage.imageIndex]
         }else{
         this.api.updateImagePosition(this.compId,
           `${this.imageObjectList[this.pressedImage.imageIndex].imageData._id}.${this.imageObjectList[this.pressedImage.imageIndex].imageData.extension}`,
@@ -201,21 +203,38 @@ export class PhotoCanvasComponent implements OnInit {
         this.fullImage = false
       }
       this.imagedMoved = false
-      this.pressedImage = undefined as unknown as {imageIndex:number,mouseX:number,mouseY:number,imageX:number,imageY:number}
+      this.pressedImage = undefined as unknown as {imageIndex:number,mouseX:number,mouseY:number,imageX:number,imageY:number,initialWidth:number,initialHeight:number}
       this.pressedCanvas = undefined as unknown as {mouseX:number,mouseY:number,canvasX:number,canvasY:number}
     }//updating position of image if moved, clearing data of pressed objects
     this.app.renderer.view.onmousemove = (e:any) =>{
-      if(this.pressedImage&&this.isAuthor){//moving image on canvas
-        this.imageObjectList[this.pressedImage.imageIndex].container.x=e.clientX-this.pressedImage.imageX
-        this.imageObjectList[this.pressedImage.imageIndex].container.y=e.clientY-this.pressedImage.imageY
-        this.imageObjectList[this.pressedImage.imageIndex].imageData.position.x=e.clientX-this.pressedImage.imageX
-        this.imageObjectList[this.pressedImage.imageIndex].imageData.position.y=e.clientY-this.pressedImage.imageY
-        this.imagedMoved = true
-      }
-      else if(this.pressedCanvas){//moving canvas around
-        this.mainContainer.x=e.clientX-this.pressedCanvas.canvasX
-        this.mainContainer.y=e.clientY-this.pressedCanvas.canvasY
-      }
+        for(let i =0;i<this.imageObjectList.length;i++){
+          if(this.imageObjectList[i].checkBorder(e,this.mainContainer)){
+            this.el.nativeElement.style.cursor = "nwse-resize"
+            if(this.pressedImage){
+              this.imageObjectList[this.pressedImage.imageIndex].imageSprite.width=e.offsetX-(this.imageObjectList[this.pressedImage.imageIndex].imageData.position.x)
+              this.imageObjectList[this.pressedImage.imageIndex].imageSprite.height=e.offsetY-(this.imageObjectList[this.pressedImage.imageIndex].imageData.position.y)
+              console.log(e.offsetX)
+            }
+          }
+          else {
+            this.el.nativeElement.style.cursor = "auto"
+            // if(this.pressedImage&&this.isAuthor){//moving image on canvas
+            //   this.imageObjectList[this.pressedImage.imageIndex].container.x=e.clientX-this.pressedImage.imageX
+            //   this.imageObjectList[this.pressedImage.imageIndex].container.y=e.clientY-this.pressedImage.imageY
+            //   this.imageObjectList[this.pressedImage.imageIndex].imageData.position.x=e.clientX-this.pressedImage.imageX
+            //   this.imageObjectList[this.pressedImage.imageIndex].imageData.position.y=e.clientY-this.pressedImage.imageY
+            //   this.imagedMoved = true
+            // }
+            // else if(this.pressedCanvas){//moving canvas around
+            //   this.mainContainer.x=e.clientX-this.pressedCanvas.canvasX
+            //   this.mainContainer.y=e.clientY-this.pressedCanvas.canvasY
+            // }
+          }
+        }
+
+
+
+
     }//moving either image or canvas around
 
 

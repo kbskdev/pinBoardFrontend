@@ -23,6 +23,7 @@ export class ImageTile {
 
   constructor(imageData:Image) {
     this.reader.addEventListener("loadend",()=>{
+      this.imageData.imageString = this.reader.result as string
       this.imageSprite = new PIXI.Sprite(new PIXI.Texture((new PIXI.BaseTexture( this.reader.result as string))))
       this.imageSprite.zIndex = 0
       this.container.sortableChildren = true
@@ -104,7 +105,6 @@ export class ImageTile {
     else if(this.imageData.date==""&&this.dateText) this.deleteDateTile()
   }//method called on every form changes
 
-
   loadImage(){
 
     return new Promise<string>(resolve => {
@@ -118,6 +118,18 @@ export class ImageTile {
     return (mouse.offsetX > this.container.x + mainContainer.x) && (mouse.offsetY > this.container.y +mainContainer.y) &&
       (mouse.offsetX < this.container.x + this.container.width + mainContainer.x) &&
       (mouse.offsetY < this.container.y + this.container.height + mainContainer.y)
+  }
+
+  checkBorder(mouse:MouseEvent,mainContainer:PIXI.Container):boolean{
+    return (((mouse.offsetX > this.container.x  + mainContainer.x-20) &&
+        (mouse.offsetY > this.container.y +mainContainer.y-20) &&
+        (mouse.offsetX < this.container.x + this.imageSprite.width + mainContainer.x+20) &&
+        (mouse.offsetY < this.container.y + this.imageSprite.height + mainContainer.y+20))
+
+      &&!((mouse.offsetX > this.container.x+10 + mainContainer.x)
+        &&(mouse.offsetY > this.container.y+10 + mainContainer.y) &&
+        (mouse.offsetX < this.container.x + this.imageSprite.width-10 + mainContainer.x) &&
+        (mouse.offsetY < this.container.y + this.imageSprite.height-10 + mainContainer.y)))
   }
 
 }
