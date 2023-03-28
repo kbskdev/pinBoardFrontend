@@ -32,4 +32,5 @@
     <button mat-raised-button color="primary" type="submit" [disabled]="!newImage">Send photo</button>
   </form>
 </div>
- <app-full-image class="fullImage" *ngIf="fullImage" [image]="fullImageData"></app-full-image>
+
+ <app-full-image [style]="fullImageStyle"  *ngIf="fullImage" [image]="fullImageData"></app-full-image>

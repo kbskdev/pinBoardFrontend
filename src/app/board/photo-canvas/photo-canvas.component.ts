@@ -7,6 +7,7 @@ import {OneCompResponse} from "../../models/one-comp-response";
 
 
 
+
 @Component({
   selector: 'app-photo-canvas',
   templateUrl: './photo-canvas.component.html',
@@ -50,6 +51,7 @@ export class PhotoCanvasComponent implements OnInit {
   imagedMoved:boolean = false
   fullImage:boolean = false
   fullImageData:ImageTile
+  fullImageStyle:any
   //info about added image
 
   goBack(){
@@ -83,7 +85,6 @@ export class PhotoCanvasComponent implements OnInit {
       this.dragPhotoMode = false
 
       this.imageObjectList.push(this.newImage)
-      this.newImage.imageData.title = 'kutas'
       console.log(this.imageObjectList)
 
       await this.imageObjectList[this.imageObjectList.length - 1].loadImage()
@@ -100,7 +101,7 @@ export class PhotoCanvasComponent implements OnInit {
   deletePhoto(id:number){
     this.api.deleteImage(this.compId,`${this.imageObjectList[id].imageData._id}.${this.imageObjectList[id].imageData.extension}`).subscribe()
 
-    this.imageObjectList[id].container.parent.removeChild(this.newImage.container)
+    this.imageObjectList[id].container.parent.removeChild(this.imageObjectList[id].container)
     this.imageObjectList[id].container.destroy({children:true, texture:true, baseTexture:true})
 
     this.imageObjectList.splice(id,1)
@@ -127,6 +128,7 @@ export class PhotoCanvasComponent implements OnInit {
       console.log(this.newDate)
       this.imageObjectList[this.imageObjectList.length-1].imageData.title = this.newTitle
       this.imageObjectList[this.imageObjectList.length-1].imageData.date = this.newDate
+      this.imageObjectList[this.imageObjectList.length-1].imageData.description = this.newDescription
       this.imageObjectList[this.imageObjectList.length-1].updateTexts()
     }
 
@@ -169,35 +171,58 @@ export class PhotoCanvasComponent implements OnInit {
     })
     //getting all photos on board
 
-    this.app.renderer.view.onmousedown = (e:MouseEvent) =>{
-      for(let i=0;i<this.imageObjectList.length;i++){
-        if(this.imageObjectList[i].checkCollision(e,this.mainContainer)){//checking if mouse was down on any image
-          if(this.deletePhotoMode&&this.isAuthor){//if user had deleteMode on, deleting an image
-            this.deletePhoto(i)
-            break
-          }
-          else {//if deletePhotoMode was off, setting data for moving images around
-            this.pressedImage = {imageIndex: i,mouseY:e.clientY,mouseX:e.clientX,imageX:e.clientX-this.imageObjectList[i].container.x,imageY:e.clientY-this.imageObjectList[i].container.y,initialWidth:this.imageObjectList[i].imageSprite.width,initialHeight:this.imageObjectList[i].imageSprite.height}
-          }
-        }
-        else {//data used for moving canvas around
+    this.app.renderer.view.onmousedown = (e:MouseEvent) => {
+      if (!this.fullImage) {
+        for (let i = 0; i < this.imageObjectList.length; i++) {
+          if (this.imageObjectList[i].checkCollision(e, this.mainContainer)) {//checking if mouse was down on any image
+            if (this.deletePhotoMode && this.isAuthor) {//if user had deleteMode on, deleting an image
+              this.deletePhoto(i)
+              break
+            } else {//if deletePhotoMode was off, setting data for moving images around
+              this.pressedImage = {
+                imageIndex: i,
+                mouseY: e.clientY,
+                mouseX: e.clientX,
+                imageX: e.clientX - this.imageObjectList[i].container.x,
+                imageY: e.clientY - this.imageObjectList[i].container.y,
+                initialWidth: this.imageObjectList[i].imageSprite.width,
+                initialHeight: this.imageObjectList[i].imageSprite.height
+              }
+            }
+          } else {//data used for moving canvas around
 
-          this.pressedCanvas = {mouseY:e.clientY,mouseX:e.clientX,canvasX:e.clientX-this.mainContainer.x,canvasY:e.clientY-this.mainContainer.y}
+            this.pressedCanvas = {
+              mouseY: e.clientY,
+              mouseX: e.clientX,
+              canvasX: e.clientX - this.mainContainer.x,
+              canvasY: e.clientY - this.mainContainer.y
+            }
+          }
         }
       }
     }//checking if user clicked on canvas or image, deleting image if deletePhoto mode on, saving data of pressed object
 
     this.app.renderer.view.onmouseup = () =>{
-      if(this.pressedImage&&!(this.pressedImage.imageIndex==this.imageObjectList.length-1&&this.newImage)&&this.isAuthor){//updating position of moved image
+      if(this.pressedImage&&!(this.pressedImage.imageIndex==this.imageObjectList.length-1&&this.newImage)){//updating position of moved image
 
         if(!this.imagedMoved){
           this.fullImage = true
           this.fullImageData = this.imageObjectList[this.pressedImage.imageIndex]
+          this.fullImageStyle = {
+            display:'block',
+            position:'absolute',
+            top:`max(calc(50% - ${this.fullImageData.imageSprite.height/2}px), 15%)`,
+            left:`max(calc(50% - ${this.fullImageData.imageSprite.width/2}px), 15%)`,
+            width:`${this.fullImageData.imageSprite.width}px`,
+            height:`${this.fullImageData.imageSprite.height}px+200px`,
+            maxWidth:'70%',
+            maxHeight:'70%',
+                                 }
         }else{
-        this.api.updateImagePosition(this.compId,
+        this.isAuthor?this.api.updateImagePosition(this.compId,
           `${this.imageObjectList[this.pressedImage.imageIndex].imageData._id}.${this.imageObjectList[this.pressedImage.imageIndex].imageData.extension}`,
         this.imageObjectList[this.pressedImage.imageIndex].container.x,
-          this.imageObjectList[this.pressedImage.imageIndex].container.y).subscribe()}
+          this.imageObjectList[this.pressedImage.imageIndex].container.y).subscribe():null}
       }
       else if(this.fullImage){
         this.fullImage = false
@@ -207,37 +232,17 @@ export class PhotoCanvasComponent implements OnInit {
       this.pressedCanvas = undefined as unknown as {mouseX:number,mouseY:number,canvasX:number,canvasY:number}
     }//updating position of image if moved, clearing data of pressed objects
     this.app.renderer.view.onmousemove = (e:any) =>{
-        for(let i =0;i<this.imageObjectList.length;i++){
-          if(this.imageObjectList[i].checkBorder(e,this.mainContainer)){
-            this.el.nativeElement.style.cursor = "nwse-resize"
-            if(this.pressedImage){
-              this.imageObjectList[this.pressedImage.imageIndex].imageSprite.width=e.offsetX-(this.imageObjectList[this.pressedImage.imageIndex].imageData.position.x)
-              this.imageObjectList[this.pressedImage.imageIndex].imageSprite.height=e.offsetY-(this.imageObjectList[this.pressedImage.imageIndex].imageData.position.y)
-              console.log(e.offsetX)
+            if(this.pressedImage&&this.isAuthor){//moving image on canvas
+              this.imageObjectList[this.pressedImage.imageIndex].container.x=e.clientX-this.pressedImage.imageX
+              this.imageObjectList[this.pressedImage.imageIndex].container.y=e.clientY-this.pressedImage.imageY
+              this.imageObjectList[this.pressedImage.imageIndex].imageData.position.x=e.clientX-this.pressedImage.imageX
+              this.imageObjectList[this.pressedImage.imageIndex].imageData.position.y=e.clientY-this.pressedImage.imageY
+              this.imagedMoved = true
             }
-          }
-          else {
-            this.el.nativeElement.style.cursor = "auto"
-            // if(this.pressedImage&&this.isAuthor){//moving image on canvas
-            //   this.imageObjectList[this.pressedImage.imageIndex].container.x=e.clientX-this.pressedImage.imageX
-            //   this.imageObjectList[this.pressedImage.imageIndex].container.y=e.clientY-this.pressedImage.imageY
-            //   this.imageObjectList[this.pressedImage.imageIndex].imageData.position.x=e.clientX-this.pressedImage.imageX
-            //   this.imageObjectList[this.pressedImage.imageIndex].imageData.position.y=e.clientY-this.pressedImage.imageY
-            //   this.imagedMoved = true
-            // }
-            // else if(this.pressedCanvas){//moving canvas around
-            //   this.mainContainer.x=e.clientX-this.pressedCanvas.canvasX
-            //   this.mainContainer.y=e.clientY-this.pressedCanvas.canvasY
-            // }
-          }
-        }
-
-
-
-
-    }//moving either image or canvas around
-
-
-
+            else if(this.pressedCanvas){//moving canvas around
+              this.mainContainer.x=e.clientX-this.pressedCanvas.canvasX
+              this.mainContainer.y=e.clientY-this.pressedCanvas.canvasY
+            }
+          }//moving either image or canvas around
     this.el.nativeElement.appendChild(this.app.view)
   }}

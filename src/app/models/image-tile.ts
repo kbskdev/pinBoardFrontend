@@ -119,17 +119,17 @@ export class ImageTile {
       (mouse.offsetX < this.container.x + this.container.width + mainContainer.x) &&
       (mouse.offsetY < this.container.y + this.container.height + mainContainer.y)
   }
-
-  checkBorder(mouse:MouseEvent,mainContainer:PIXI.Container):boolean{
-    return (((mouse.offsetX > this.container.x  + mainContainer.x-20) &&
-        (mouse.offsetY > this.container.y +mainContainer.y-20) &&
-        (mouse.offsetX < this.container.x + this.imageSprite.width + mainContainer.x+20) &&
-        (mouse.offsetY < this.container.y + this.imageSprite.height + mainContainer.y+20))
-
-      &&!((mouse.offsetX > this.container.x+10 + mainContainer.x)
-        &&(mouse.offsetY > this.container.y+10 + mainContainer.y) &&
-        (mouse.offsetX < this.container.x + this.imageSprite.width-10 + mainContainer.x) &&
-        (mouse.offsetY < this.container.y + this.imageSprite.height-10 + mainContainer.y)))
-  }
+  //
+  // checkBorder(mouse:MouseEvent,mainContainer:PIXI.Container):boolean{
+  //   return (((mouse.offsetX > this.container.x  + mainContainer.x-20) &&
+  //       (mouse.offsetY > this.container.y +mainContainer.y-20) &&
+  //       (mouse.offsetX < this.container.x + this.imageSprite.width + mainContainer.x+20) &&
+  //       (mouse.offsetY < this.container.y + this.imageSprite.height + mainContainer.y+20))
+  //
+  //     &&!((mouse.offsetX > this.container.x+10 + mainContainer.x)
+  //       &&(mouse.offsetY > this.container.y+10 + mainContainer.y) &&
+  //       (mouse.offsetX < this.container.x + this.imageSprite.width-10 + mainContainer.x) &&
+  //       (mouse.offsetY < this.container.y + this.imageSprite.height-10 + mainContainer.y)))
+  // }
 
 }

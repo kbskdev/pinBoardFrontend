@@ -65,9 +65,10 @@ background-color: #d7d6d6;
   left: 30%;
   width: 40%;
   height: 60%;
-  background-color: burlywood;
   display: flex;
   justify-content: center;
   align-items: center;
   flex-wrap: wrap;
+  background-color: burlywood;
 }
+
