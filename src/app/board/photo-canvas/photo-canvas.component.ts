@@ -18,9 +18,6 @@ export class PhotoCanvasComponent implements OnInit {
   constructor(private el:ElementRef, private api:HttpService, private route:ActivatedRoute,private router:Router) {
     this.compId = this.route.snapshot.queryParamMap.get('id')!
     this.authorId = this.route.snapshot.queryParamMap.get('userId')!
-
-    console.log(this.authorId)
-    console.log(this.compId)
   }
   compId:string
   authorId:string
@@ -89,11 +86,8 @@ export class PhotoCanvasComponent implements OnInit {
 
       await this.imageObjectList[this.imageObjectList.length - 1].loadImage()
 
-      this.newImage.imageData.position.x = this.newImage.imageData.position.x - this.newImage.imageSprite.width/2
-      this.newImage.imageData.position.y = this.newImage.imageData.position.y - this.newImage.imageSprite.height/2
-      this.mainContainer.addChild(this.imageObjectList[this.imageObjectList.length-1].container)
-
-
+      this.newImage.imageData.position.x -= this.newImage.imageSprite.width/2
+      this.newImage.imageData.position.y -= this.newImage.imageSprite.height/2
       this.mainContainer.addChild(this.imageObjectList[this.imageObjectList.length-1].container)
 
   }//that event is called when dragndrop directive emits event with dropped file
@@ -124,24 +118,20 @@ export class PhotoCanvasComponent implements OnInit {
   }//sending photo,updating,imageList,changing back addPhotoMode
 
     updateImage(){
-    if(this.newImage){
-      console.log(this.newDate)
-      this.imageObjectList[this.imageObjectList.length-1].imageData.title = this.newTitle
-      this.imageObjectList[this.imageObjectList.length-1].imageData.date = this.newDate
-      this.imageObjectList[this.imageObjectList.length-1].imageData.description = this.newDescription
-      this.imageObjectList[this.imageObjectList.length-1].updateTexts()
-    }
-
+      if(this.newImage){
+        this.imageObjectList[this.imageObjectList.length-1].imageData.title = this.newTitle
+        this.imageObjectList[this.imageObjectList.length-1].imageData.date = this.newDate
+        this.imageObjectList[this.imageObjectList.length-1].imageData.description = this.newDescription
+        this.imageObjectList[this.imageObjectList.length-1].updateTexts()
+      }
     }
 
     async loadImages(compData:OneCompResponse){
       for (const image of compData.data.composition[0].images){
-
         const file = await this.api.getImagePromise(this.authorId,this.compId, `${image._id}.${image.extension}`)
         this.imageObjectList.push(new ImageTile({...image,imageBlob:file}))
         await this.imageObjectList[this.imageObjectList.length-1].loadImage()
         this.mainContainer.addChild(this.imageObjectList[this.imageObjectList.length-1].container)
-
       }
     }
 
@@ -160,7 +150,6 @@ export class PhotoCanvasComponent implements OnInit {
 
     this.api.isAuthor(this.compId).subscribe(result=>{
       this.isAuthor = result.status
-
       this.isAuthor?this.api.getOneComp(this.compId).subscribe(async( compData)=>{
           await this.loadImages(compData)
         }
@@ -188,20 +177,20 @@ export class PhotoCanvasComponent implements OnInit {
                 initialWidth: this.imageObjectList[i].imageSprite.width,
                 initialHeight: this.imageObjectList[i].imageSprite.height
               }
+              break
             }
           } else {//data used for moving canvas around
-
             this.pressedCanvas = {
               mouseY: e.clientY,
               mouseX: e.clientX,
               canvasX: e.clientX - this.mainContainer.x,
               canvasY: e.clientY - this.mainContainer.y
             }
+
           }
         }
       }
     }//checking if user clicked on canvas or image, deleting image if deletePhoto mode on, saving data of pressed object
-
     this.app.renderer.view.onmouseup = () =>{
       if(this.pressedImage&&!(this.pressedImage.imageIndex==this.imageObjectList.length-1&&this.newImage)){//updating position of moved image
 
@@ -217,26 +206,24 @@ export class PhotoCanvasComponent implements OnInit {
             height:`${this.fullImageData.imageSprite.height}px+200px`,
             maxWidth:'70%',
             maxHeight:'70%',
-                                 }
+                                 }//style of fullImage
         }else{
         this.isAuthor?this.api.updateImagePosition(this.compId,
           `${this.imageObjectList[this.pressedImage.imageIndex].imageData._id}.${this.imageObjectList[this.pressedImage.imageIndex].imageData.extension}`,
-        this.imageObjectList[this.pressedImage.imageIndex].container.x,
+          this.imageObjectList[this.pressedImage.imageIndex].container.x,
           this.imageObjectList[this.pressedImage.imageIndex].container.y).subscribe():null}
       }
       else if(this.fullImage){
         this.fullImage = false
       }
+
       this.imagedMoved = false
       this.pressedImage = undefined as unknown as {imageIndex:number,mouseX:number,mouseY:number,imageX:number,imageY:number,initialWidth:number,initialHeight:number}
       this.pressedCanvas = undefined as unknown as {mouseX:number,mouseY:number,canvasX:number,canvasY:number}
     }//updating position of image if moved, clearing data of pressed objects
     this.app.renderer.view.onmousemove = (e:any) =>{
             if(this.pressedImage&&this.isAuthor){//moving image on canvas
-              this.imageObjectList[this.pressedImage.imageIndex].container.x=e.clientX-this.pressedImage.imageX
-              this.imageObjectList[this.pressedImage.imageIndex].container.y=e.clientY-this.pressedImage.imageY
-              this.imageObjectList[this.pressedImage.imageIndex].imageData.position.x=e.clientX-this.pressedImage.imageX
-              this.imageObjectList[this.pressedImage.imageIndex].imageData.position.y=e.clientY-this.pressedImage.imageY
+              this.imageObjectList[this.pressedImage.imageIndex].moveImage(e,{x:this.pressedImage.imageX,y:this.pressedImage.imageY})
               this.imagedMoved = true
             }
             else if(this.pressedCanvas){//moving canvas around
@@ -244,5 +231,6 @@ export class PhotoCanvasComponent implements OnInit {
               this.mainContainer.y=e.clientY-this.pressedCanvas.canvasY
             }
           }//moving either image or canvas around
+
     this.el.nativeElement.appendChild(this.app.view)
   }}

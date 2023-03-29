@@ -17,7 +17,6 @@ export class ImageTile {
 
   ready = false
 
-  empty = true
 
   private reader = new FileReader()
 
@@ -28,7 +27,6 @@ export class ImageTile {
       this.imageSprite.zIndex = 0
       this.container.sortableChildren = true
       this.container.addChild(this.imageSprite)
-      this.empty = false
       this.ready = true
 
       setTimeout(()=>this.createContainer(),1)
@@ -67,7 +65,6 @@ export class ImageTile {
 
     this.titleText.y = -this.titleText.style.fontSize - 4
     this.titleText.x = 5
-    this.empty = false
   }
   private deleteTitleTile(){
     this.container.parent.removeChild(this.titleText!)
@@ -85,7 +82,6 @@ export class ImageTile {
     this.dateText.x = 5
 
     this.container.addChild(this.dateText)
-    this.empty = false
   }
   private deleteDateTile(){
     this.container.parent.removeChild(this.dateText!)
@@ -106,12 +102,9 @@ export class ImageTile {
   }//method called on every form changes
 
   loadImage(){
-
     return new Promise<string>(resolve => {
       this.reader.onloadend = () => { resolve('')}
     })
-
-
   }
 
   checkCollision(mouse:MouseEvent,mainContainer:PIXI.Container):boolean{
@@ -119,6 +112,14 @@ export class ImageTile {
       (mouse.offsetX < this.container.x + this.container.width + mainContainer.x) &&
       (mouse.offsetY < this.container.y + this.container.height + mainContainer.y)
   }
+
+  moveImage(e:MouseEvent,modifier:{x:number,y:number}){
+    this.container.x=e.clientX-modifier.x
+    this.container.y=e.clientY-modifier.y
+    this.imageData.position.x=e.clientX-modifier.x
+    this.imageData.position.y=e.clientY-modifier.y
+  }
+
   //
   // checkBorder(mouse:MouseEvent,mainContainer:PIXI.Container):boolean{
   //   return (((mouse.offsetX > this.container.x  + mainContainer.x-20) &&
