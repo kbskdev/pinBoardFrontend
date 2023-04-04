@@ -115,6 +115,9 @@ export class PhotoCanvasComponent implements OnInit {
     })
     this.newImage = undefined as unknown as ImageTile
     this.changeAddPhotoMode()
+    this.newImage.imageData.title = ""
+    this.newImage.imageData.date = ""
+    this.newImage.imageData.description = ""
   }//sending photo,updating,imageList,changing back addPhotoMode
 
     updateImage(){
@@ -208,10 +211,12 @@ export class PhotoCanvasComponent implements OnInit {
             maxHeight:'70%',
                                  }//style of fullImage
         }else{
-        this.isAuthor?this.api.updateImagePosition(this.compId,
+        this.isAuthor?
+          this.api.updateImagePosition(this.compId,
           `${this.imageObjectList[this.pressedImage.imageIndex].imageData._id}.${this.imageObjectList[this.pressedImage.imageIndex].imageData.extension}`,
           this.imageObjectList[this.pressedImage.imageIndex].container.x,
-          this.imageObjectList[this.pressedImage.imageIndex].container.y).subscribe():null}
+          this.imageObjectList[this.pressedImage.imageIndex].container.y).subscribe():
+          null}
       }
       else if(this.fullImage){
         this.fullImage = false
@@ -233,4 +238,5 @@ export class PhotoCanvasComponent implements OnInit {
           }//moving either image or canvas around
 
     this.el.nativeElement.appendChild(this.app.view)
-  }}
+  }
+}
