@@ -4,8 +4,7 @@ import {HttpService} from "../../service/http.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {ImageTile} from "../../models/image-tile";
 import {OneCompResponse} from "../../models/one-comp-response";
-
-
+import {CollisionPlace} from "../../models/collision-place";
 
 
 @Component({
@@ -44,8 +43,10 @@ export class PhotoCanvasComponent implements OnInit {
   isAuthor:boolean = false
   isPublic:boolean = false
 
+  cursorPosition: { place:CollisionPlace,imageIndex:number|null }
 
-  imagedMoved:boolean = false
+
+  imageMoved:boolean = false
   fullImage:boolean = false
   fullImageData:ImageTile
   fullImageStyle:any
@@ -166,7 +167,7 @@ export class PhotoCanvasComponent implements OnInit {
     this.app.renderer.view.onmousedown = (e:MouseEvent) => {
       if (!this.fullImage) {
         for (let i = 0; i < this.imageObjectList.length; i++) {
-          if (this.imageObjectList[i].checkCollision(e, this.mainContainer)) {//checking if mouse was down on any image
+          if (this.imageObjectList[i].checkCollision(e, this.mainContainer)>0) {//checking if mouse was down on any image
             if (this.deletePhotoMode && this.isAuthor) {//if user had deleteMode on, deleting an image
               this.deletePhoto(i)
               break
@@ -197,7 +198,7 @@ export class PhotoCanvasComponent implements OnInit {
     this.app.renderer.view.onmouseup = () =>{
       if(this.pressedImage&&!(this.pressedImage.imageIndex==this.imageObjectList.length-1&&this.newImage)){//updating position of moved image
 
-        if(!this.imagedMoved){
+        if(!this.imageMoved){
           this.fullImage = true
           this.fullImageData = this.imageObjectList[this.pressedImage.imageIndex]
           this.fullImageStyle = {
@@ -222,14 +223,62 @@ export class PhotoCanvasComponent implements OnInit {
         this.fullImage = false
       }
 
-      this.imagedMoved = false
+      this.imageMoved = false
       this.pressedImage = undefined as unknown as {imageIndex:number,mouseX:number,mouseY:number,imageX:number,imageY:number,initialWidth:number,initialHeight:number}
       this.pressedCanvas = undefined as unknown as {mouseX:number,mouseY:number,canvasX:number,canvasY:number}
     }//updating position of image if moved, clearing data of pressed objects
     this.app.renderer.view.onmousemove = (e:any) =>{
+            for(let i =0;i<this.imageObjectList.length;i++){
+
+              this.cursorPosition = {place:this.imageObjectList[i].checkCollision(e,this.mainContainer),imageIndex:i}
+
+              if(this.cursorPosition.place==CollisionPlace.TOP_LEFT){
+                this.el.nativeElement.style.cursor = "nwse-resize"
+                break
+              }
+              else if(this.cursorPosition.place==CollisionPlace.TOP_RIGHT){
+                this.el.nativeElement.style.cursor = "nesw-resize"
+                break
+              }
+              else if(this.cursorPosition.place==CollisionPlace.BOTTOM_RIGHT){
+                this.el.nativeElement.style.cursor = "nwse-resize"
+                break
+              }
+              else if(this.cursorPosition.place==CollisionPlace.BOTTOM_LEFT){
+                this.el.nativeElement.style.cursor = "nesw-resize"
+                break
+              }
+
+              else if(this.cursorPosition.place==CollisionPlace.TOP){
+                this.el.nativeElement.style.cursor = "ns-resize"
+                break
+              }
+              else if(this.cursorPosition.place==CollisionPlace.BOTTOM){
+                this.el.nativeElement.style.cursor = "ns-resize"
+                break
+              }
+              else if(this.cursorPosition.place==CollisionPlace.LEFT){
+                this.el.nativeElement.style.cursor = "ew-resize"
+                break
+              }
+              else if(this.cursorPosition.place==CollisionPlace.RIGHT){
+                this.el.nativeElement.style.cursor = "ew-resize"
+                break
+              }
+
+              else if(this.cursorPosition.place==CollisionPlace.INSIDE){
+                this.el.nativeElement.style.cursor = "grab"
+                break
+              }
+
+              else {
+                this.cursorPosition.imageIndex = null
+                this.el.nativeElement.style.cursor = "auto"
+              }
+            }
             if(this.pressedImage&&this.isAuthor){//moving image on canvas
               this.imageObjectList[this.pressedImage.imageIndex].moveImage(e,{x:this.pressedImage.imageX,y:this.pressedImage.imageY})
-              this.imagedMoved = true
+              this.imageMoved = true
             }
             else if(this.pressedCanvas){//moving canvas around
               this.mainContainer.x=e.clientX-this.pressedCanvas.canvasX
@@ -238,5 +287,6 @@ export class PhotoCanvasComponent implements OnInit {
           }//moving either image or canvas around
 
     this.el.nativeElement.appendChild(this.app.view)
+    console.log(this.isAuthor)
   }
 }

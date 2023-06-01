@@ -1,5 +1,6 @@
 import * as PIXI from "pixi.js";
 import {Image} from "./image";
+import {CollisionPlace} from "./collision-place";
 
 
 export class ImageTile {
@@ -107,10 +108,77 @@ export class ImageTile {
     })
   }
 
-  checkCollision(mouse:MouseEvent,mainContainer:PIXI.Container):boolean{
-    return (mouse.offsetX > this.container.x + mainContainer.x) && (mouse.offsetY > this.container.y +mainContainer.y) &&
-      (mouse.offsetX < this.container.x + this.container.width + mainContainer.x) &&
-      (mouse.offsetY < this.container.y + this.container.height + mainContainer.y)
+  checkCollision(mouse:MouseEvent,mainContainer:PIXI.Container,borderThickness=15):CollisionPlace{
+    if((mouse.offsetX > this.container.x + mainContainer.x) &&
+      (mouse.offsetX < this.container.x + this.imageSprite.width + mainContainer.x) &&
+      (mouse.offsetY > this.container.y + mainContainer.y) &&
+      (mouse.offsetY < this.container.y + this.imageSprite.height + mainContainer.y)){
+        if(
+          (mouse.offsetX > this.container.x + mainContainer.x)&&
+          (mouse.offsetX < this.container.x + borderThickness + mainContainer.x)&&
+          (mouse.offsetY > this.container.y + mainContainer.y) &&
+          (mouse.offsetY < this.container.y + borderThickness + mainContainer.y)){
+            return CollisionPlace.TOP_LEFT
+        }
+        else if(
+          (mouse.offsetX > this.container.x + this.imageSprite.width-borderThickness + mainContainer.x )&&
+          (mouse.offsetX < this.container.x + this.imageSprite.width + mainContainer.x)&&
+          (mouse.offsetY > this.container.y +mainContainer.y) &&
+          (mouse.offsetY < this.container.y + borderThickness + mainContainer.y)){
+            return CollisionPlace.TOP_RIGHT
+        }
+        else if(
+          (mouse.offsetX > this.container.x + mainContainer.x)&&
+          (mouse.offsetX < this.container.x + borderThickness + mainContainer.x)&&
+          (mouse.offsetY > this.container.y + this.imageSprite.height-borderThickness + mainContainer.y) &&
+          (mouse.offsetY < this.container.y +  this.imageSprite.height + mainContainer.y)){
+          return CollisionPlace.BOTTOM_LEFT
+        }
+        else if(
+          (mouse.offsetX > this.container.x + this.imageSprite.width-borderThickness + mainContainer.x )&&
+          (mouse.offsetX < this.container.x + this.imageSprite.width + mainContainer.x)&&
+          (mouse.offsetY > this.container.y + this.imageSprite.height-borderThickness + mainContainer.y) &&
+          (mouse.offsetY < this.container.y +  this.imageSprite.height + mainContainer.y)){
+          return CollisionPlace.BOTTOM_RIGHT
+        }
+
+        else if(
+          (mouse.offsetX > this.container.x + mainContainer.x)&&
+          (mouse.offsetX < this.container.x + this.imageSprite.width + mainContainer.x)&&
+          (mouse.offsetY > this.container.y + mainContainer.y) &&
+          (mouse.offsetY < this.container.y + borderThickness + mainContainer.y)
+          ){
+            return CollisionPlace.TOP
+        }
+        else if(
+          (mouse.offsetX > this.container.x + mainContainer.x)&&
+          (mouse.offsetX < this.container.x + this.imageSprite.width + mainContainer.x)&&
+          (mouse.offsetY > this.container.y + this.imageSprite.height-borderThickness + mainContainer.y) &&
+          (mouse.offsetY < this.container.y + this.imageSprite.height + mainContainer.y)
+        ){
+          return CollisionPlace.BOTTOM
+        }
+        else if(
+          (mouse.offsetX > this.container.x + mainContainer.x)&&
+          (mouse.offsetX < this.container.x + borderThickness + mainContainer.x)&&
+          (mouse.offsetY > this.container.y + mainContainer.y) &&
+          (mouse.offsetY < this.container.y + this.imageSprite.height + mainContainer.y)
+        ){
+          return CollisionPlace.LEFT
+        }
+        else if(
+          (mouse.offsetX > this.container.x + this.imageSprite.width-borderThickness+ mainContainer.x)&&
+          (mouse.offsetX < this.container.x + this.imageSprite.width + mainContainer.x)&&
+          (mouse.offsetY > this.container.y + mainContainer.y) &&
+          (mouse.offsetY < this.container.y + this.imageSprite.height + mainContainer.y)
+        ){
+          return CollisionPlace.RIGHT
+        }
+
+
+       return CollisionPlace.INSIDE
+    }
+    return CollisionPlace.NOT_IN
   }
 
   moveImage(e:MouseEvent,modifier:{x:number,y:number}){
@@ -120,17 +188,7 @@ export class ImageTile {
     this.imageData.position.y=e.clientY-modifier.y
   }
 
-  //
-  // checkBorder(mouse:MouseEvent,mainContainer:PIXI.Container):boolean{
-  //   return (((mouse.offsetX > this.container.x  + mainContainer.x-20) &&
-  //       (mouse.offsetY > this.container.y +mainContainer.y-20) &&
-  //       (mouse.offsetX < this.container.x + this.imageSprite.width + mainContainer.x+20) &&
-  //       (mouse.offsetY < this.container.y + this.imageSprite.height + mainContainer.y+20))
-  //
-  //     &&!((mouse.offsetX > this.container.x+10 + mainContainer.x)
-  //       &&(mouse.offsetY > this.container.y+10 + mainContainer.y) &&
-  //       (mouse.offsetX < this.container.x + this.imageSprite.width-10 + mainContainer.x) &&
-  //       (mouse.offsetY < this.container.y + this.imageSprite.height-10 + mainContainer.y)))
-  // }
+
+
 
 }

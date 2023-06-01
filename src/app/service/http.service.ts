@@ -10,7 +10,7 @@ import {Image} from "../models/image";
 })
 export class HttpService {
 
-  domain  = 'kbskdev.com'
+  domain  = 'localhost:8000'
 
 
 
@@ -48,12 +48,17 @@ export class HttpService {
     return this.http.patch<any>(`http://${this.domain}/api/v1/images/updateImagePosition/${comp}/${image}/${x}/${y}`,{})
   }
 
+  updateImageSize(comp:string,image:string,width:number,height:number){
+    return this.http.patch<any>(`http://${this.domain}/api/v1/images/updateImageSize/${comp}/${image}/${width}/${height}`,{})
+  }
+
   deleteImage(comp:string,image:string):Observable<any>{
     return this.http.delete<any>(`http://${this.domain}/api/v1/images/deleteImage/${comp}/${image}`)
   }
 
   isAuthor(comp:string):Observable<{status:boolean}>{
-    return this.http.get<{status:boolean}>(`http://kbskdev.com/api/v1/users/isAuthor/${comp}`)
+    console.log("???")
+    return this.http.get<{status:boolean}>(`http://${this.domain}/api/v1/users/isAuthor/${comp}`)
   }
 
 
