@@ -22,9 +22,10 @@ export class ImageTile {
 
   constructor(imageData:Image) {
     this.reader.addEventListener("loadend",()=>{
-      console.log(this.imageData.currentSize)
+
       this.imageData.imageString = this.reader.result as string
       this.imageSprite = new PIXI.Sprite(new PIXI.Texture((new PIXI.BaseTexture( this.reader.result as string))))
+
       this.imageSprite.zIndex = 0
       if(this.imageData.currentSize!=undefined){
         this.imageSprite.height=this.imageData.currentSize!.height

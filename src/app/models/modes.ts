@@ -3,6 +3,5 @@ export enum Modes {
   EDIT,
   ADD,
   DRAG,
-  DELETE,
-  ALTER
+  DELETE
 }

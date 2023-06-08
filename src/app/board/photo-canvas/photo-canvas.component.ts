@@ -62,7 +62,6 @@ export class PhotoCanvasComponent implements OnInit {
       if(this.mode == mode) this.mode = Modes.EDIT
       else this.mode = mode
     }
-    console.log(this.mode)
   }
 
   goBack(){
@@ -75,7 +74,7 @@ export class PhotoCanvasComponent implements OnInit {
     this.mode = Modes.ADD
 
       this.imageObjectList.push(this.newImage)
-      console.log(this.imageObjectList)
+      //console.log(this.imageObjectList)
 
       await this.imageObjectList[this.imageObjectList.length - 1].loadImage()
 
@@ -125,7 +124,7 @@ export class PhotoCanvasComponent implements OnInit {
     async loadImages(compData:OneCompResponse){
       for (const image of compData.data.composition[0].images){
         const file = await this.api.getImagePromise(this.authorId,this.compId, `${image._id}.${image.extension}`)
-        console.log(image)
+        //console.log(image)
         this.imageObjectList.push(new ImageTile({...image,imageBlob:file}))
         await this.imageObjectList[this.imageObjectList.length-1].loadImage()
         this.mainContainer.addChild(this.imageObjectList[this.imageObjectList.length-1].container)
@@ -278,6 +277,5 @@ export class PhotoCanvasComponent implements OnInit {
           }//moving either image or canvas around
 
     this.el.nativeElement.appendChild(this.app.view)
-    console.log(this.isAuthor)
   }
 }
