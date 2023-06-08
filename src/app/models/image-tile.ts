@@ -18,14 +18,19 @@ export class ImageTile {
 
   ready = false
 
-
   private reader = new FileReader()
 
   constructor(imageData:Image) {
     this.reader.addEventListener("loadend",()=>{
+      console.log(this.imageData.currentSize)
       this.imageData.imageString = this.reader.result as string
       this.imageSprite = new PIXI.Sprite(new PIXI.Texture((new PIXI.BaseTexture( this.reader.result as string))))
       this.imageSprite.zIndex = 0
+      if(this.imageData.currentSize!=undefined){
+        this.imageSprite.height=this.imageData.currentSize!.height
+        this.imageSprite.width=this.imageData.currentSize!.width
+      }
+
       this.container.sortableChildren = true
       this.container.addChild(this.imageSprite)
       this.ready = true
@@ -182,13 +187,55 @@ export class ImageTile {
   }
 
   moveImage(e:MouseEvent,modifier:{x:number,y:number}){
+    // console.log(`myszka: ${e.clientY}`)
+    // console.log(`pozycja:${this.container.y}`)
+    // console.log(`modifier: ${modifier.y}`)
     this.container.x=e.clientX-modifier.x
     this.container.y=e.clientY-modifier.y
     this.imageData.position.x=e.clientX-modifier.x
     this.imageData.position.y=e.clientY-modifier.y
   }
 
-
+  resizeImage(e:MouseEvent,initialSize:{height:number,width:number},initialPosition:{x:number,y:number},mapModifier:{x:number,y:number},border:CollisionPlace){
+    if(border == CollisionPlace.TOP){
+      this.imageSprite.height = initialSize.height + initialPosition.y - e.offsetY + mapModifier.y
+      this.container.y = e.offsetY - mapModifier.y
+    }
+    else if(border== CollisionPlace.BOTTOM){
+      this.imageSprite.height = e.offsetY - mapModifier.y -initialPosition.y
+    }
+   else if(border == CollisionPlace.LEFT){
+     this.imageSprite.width = initialSize.width + initialPosition.x - e.offsetX + mapModifier.x
+     this.container.x = e.offsetX - mapModifier.x
+   }
+   else if(border== CollisionPlace.RIGHT){
+     this.imageSprite.width = e.offsetX - mapModifier.x - initialPosition.x
+   }
+   else  if (border==CollisionPlace.BOTTOM_RIGHT){
+      let ratio = initialSize.width/initialSize.height
+      this.imageSprite.height = e.offsetY - mapModifier.y -initialPosition.y
+      this.imageSprite.width = ratio * this.imageSprite.height
+   }
+   else  if (border==CollisionPlace.BOTTOM_LEFT){
+      let ratio = initialSize.width/initialSize.height
+      this.imageSprite.height = e.offsetY - mapModifier.y -initialPosition.y
+      this.imageSprite.width = ratio * this.imageSprite.height
+      this.container.x = initialPosition.x - (this.imageSprite.width - initialSize.width)
+   }
+   else  if (border==CollisionPlace.TOP_RIGHT){
+      let ratio = initialSize.width/initialSize.height
+      this.imageSprite.height = initialSize.height + initialPosition.y - e.offsetY + mapModifier.y
+      this.imageSprite.width = ratio * this.imageSprite.height
+      this.container.y = e.offsetY - mapModifier.y
+   }
+    else  if (border==CollisionPlace.TOP_LEFT){
+      let ratio = initialSize.width/initialSize.height
+      this.imageSprite.height = initialSize.height + initialPosition.y - e.offsetY + mapModifier.y
+      this.imageSprite.width = ratio * this.imageSprite.height
+      this.container.y = e.offsetY - mapModifier.y
+      this.container.x = initialPosition.x - (this.imageSprite.width - initialSize.width)
+    }
+  }
 
 
 }

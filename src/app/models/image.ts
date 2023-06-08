@@ -9,4 +9,6 @@ export interface Image {
   date?:string
   title?:string
   description?:string
+  currentSize?:{height:number,width:number}
+  originalSize?:{height:number,width:number}
 }

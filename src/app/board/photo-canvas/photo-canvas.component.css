@@ -71,4 +71,16 @@ background-color: #d7d6d6;
   flex-wrap: wrap;
   background-color: burlywood;
 }
-
+.editPanel{
+  height: calc(100vh - 45px);
+  width: 25vw;
+  position: absolute;
+  top: 45px;
+  right: 0;
+  display: flex;
+  justify-content:;
+  background-color: #d7d6d6;
+  z-index: 4;
+  flex-wrap: wrap;
+  flex-direction: column;
+}
