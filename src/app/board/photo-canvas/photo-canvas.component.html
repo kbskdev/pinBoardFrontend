@@ -2,41 +2,96 @@
   <button class="button" color="primary" mat-raised-button (click)="goBack()">Go back</button>
   <button class="button" color="primary" mat-raised-button (click)="modeChange(allModes.EDIT)">{{mode == allModes.VIEW?"EDIT BOARD":"STOP EDITING"}}</button>
 </div>
-<!--<div *ngIf="mode == allModes.DRAG" (droppedFile)="readNewPhoto($event.file,$event.x,$event.y)" class="dropzone" appDragndrop>-->
-<!--  <div class="centered">Drop your file here!</div>-->
-<!--</div>-->
+<div *ngIf="!newImage && mode== allModes.ADD" (droppedFile)="readNewPhoto($event.file,$event.x,$event.y)" class="dropzone" appDragndrop>
+  <div class="centered">Drop your file here!</div>
+</div>
 
-<!--<div class="editPanel" *ngIf="mode>0">-->
-<!--  <div class="buttonContainer">-->
-<!--    <button class="button" color="primary" mat-raised-button (click)="modeChange(allModes.ADD)">{{mode == allModes.ADD?"Cancel":"Add Photo"}}</button>-->
-<!--    <button  class="button" color="warn" mat-raised-button (click)="modeChange(allModes.DELETE)">{{mode == allModes.DELETE?"Cancel":"Delete"}}</button>-->
-<!--  </div>-->
+<div class="editPanel" *ngIf="mode>0">
+  <div class="buttonContainer">
+    <button class="button" color="primary" mat-raised-button (click)="modeChange(allModes.ADD)">{{mode == allModes.ADD?"Cancel":"Add Photo"}}</button>
+    <button  class="button" color="warn" mat-raised-button (click)="modeChange(allModes.DELETE)">{{mode == allModes.DELETE?"Cancel":"Delete"}}</button>
+  </div>
 
-<!--  <div *ngIf="mode == allModes.ADD || mode == allModes.DRAG" class="photoFormContainer" >-->
-<!--    <p style="font-size: 30px;width: 100%;text-align: center">Add image</p>-->
-<!--    <form #photoForm = "ngForm" class="photoForm" (ngSubmit)="sendPhoto()" >-->
-<!--      <mat-form-field appearance="fill" >-->
-<!--        <mat-label>Title</mat-label>-->
-<!--        <input #title matInput placeholder="title of image" name="title" type="text" maxlength="25" required [(ngModel)]="newTitle" (input)="updateImage()">-->
-<!--        <mat-hint align="start">{{title.value.length}}/25</mat-hint>-->
-<!--      </mat-form-field>-->
+  <div *ngIf="mode == allModes.ADD " class="photoFormContainer" >
+    <p style="font-size: 30px;width: 100%;text-align: center">Add image</p>
+    <form #photoForm = "ngForm" class="photoForm" (ngSubmit)="sendPhoto()" >
+      <mat-form-field appearance="fill" >
+        <mat-label>Title</mat-label>
+        <input #title matInput placeholder="title of image" name="title" type="text" maxlength="25" required [(ngModel)]="newImageInfo.title" (input)="updateImage()">
+        <mat-hint align="start">{{title.value.length}}/25</mat-hint>
+      </mat-form-field>
 
-<!--      <mat-form-field appearance="fill">-->
-<!--        <mat-label>Date (or anything u want here)</mat-label>-->
-<!--        <input #date matInput placeholder="dd/mm/yyyy or anything u want" name="date" type="text" maxlength="15" required [(ngModel)]="newDate" (input)="updateImage()">-->
-<!--        <mat-hint align="start">{{date.value.length}}/15</mat-hint>-->
-<!--      </mat-form-field>-->
+      <mat-form-field appearance="fill">
+        <mat-label>Date (or anything u want here)</mat-label>
+        <input #date matInput placeholder="dd/mm/yyyy or anything u want" name="date" type="text" maxlength="15" required [(ngModel)]="newImageInfo.date" (input)="updateImage()">
+        <mat-hint align="start">{{date.value.length}}/15</mat-hint>
+      </mat-form-field>
 
-<!--      <mat-form-field appearance="fill">-->
-<!--        <mat-label>Description</mat-label>-->
-<!--        <input matInput placeholder="description of image" name="description" type="text" required [(ngModel)]="newDescription" (input)="updateImage()">-->
-<!--      </mat-form-field>-->
+      <mat-form-field appearance="fill">
+        <mat-label>Description</mat-label>
+        <input matInput placeholder="description of image" name="description" type="text" required [(ngModel)]="newImageInfo.description" (input)="updateImage()">
+      </mat-form-field>
 
-<!--      <button mat-raised-button color="primary" type="submit" [disabled]="!newImage">Send photo</button>-->
-<!--    </form>-->
-<!--  </div>-->
+      <button mat-raised-button color="primary" type="submit" [disabled]="!newImage">Send photo</button>
+    </form>
+  </div>
 
-<!--</div>-->
+  <div *ngIf="lastClickedImage>-1 && mode==allModes.EDIT" class="photoFormContainer">
+    <form #photoForm = "ngForm" class="photoForm" >
+      <div class="sizeContainer">
+        <p style="width: 100%; font-size: 20px"> Original size of image (in pixels)</p>
+        <mat-form-field style="width: 30%!important;" appearance="outline">
+          <mat-label>width</mat-label>
+          <input  matInput type="number" placeholder="width" name="height" disabled [value]="Math.floor(imageObjectList[lastClickedImage].imageData.originalSize!.width).toString()">
+        </mat-form-field>
+        <mat-form-field style="width: 30%!important;" appearance="outline">
+          <mat-label>height</mat-label>
+          <input  matInput type="number" placeholder="width" name="width" disabled [value]="Math.floor(imageObjectList[lastClickedImage].imageData.originalSize!.height).toString()">
+        </mat-form-field>
+          <button mat-raised-button color="primary" class="backToOriButton" (click)="backToOriSize(lastClickedImage)">Back to original</button>
+      </div>
+
+      <div class="sizeContainer">
+        <p style="width: 100%; font-size: 20px"> Size of image (in pixels)</p>
+          <mat-form-field style="width: 30%!important;" appearance="outline">
+            <mat-label>width</mat-label>
+            <input  matInput type="number" placeholder="width" name="height" (input)="imageObjectList[lastClickedImage].changeSize(scale.checked,'width' )" [(ngModel)]="imageObjectList[lastClickedImage].imageData.currentSize!.width" [value]="Math.floor(imageObjectList[lastClickedImage].imageData.currentSize!.width).toString()">
+          </mat-form-field>
+          <mat-form-field style="width: 30%!important;" appearance="outline">
+            <mat-label>height</mat-label>
+            <input  matInput type="number" placeholder="width" name="width" (input)="imageObjectList[lastClickedImage].changeSize(scale.checked,'height')" [(ngModel)]="imageObjectList[lastClickedImage].imageData.currentSize!.height" [value]="Math.floor(imageObjectList[lastClickedImage].imageData.currentSize!.height).toString()">
+          </mat-form-field>
+        <div class="buttonAndCheckbox">
+          <mat-checkbox #scale>
+            Save scale
+          </mat-checkbox>
+          <button mat-raised-button color="primary" (click)="updateImageSizeByForm(lastClickedImage)">Change size</button>
+        </div>
+      </div>
+
+
+      <mat-form-field appearance="outline" >
+        <mat-label>Title</mat-label>
+        <input #title matInput placeholder="title of image" name="title" type="text" maxlength="25" required [value]="imageObjectList[lastClickedImage].imageData.title" [(ngModel)]="imageObjectList[lastClickedImage].imageData.title" (input)="updateImage(lastClickedImage)">
+        <mat-hint align="start">{{title.value.length}}/30</mat-hint>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Date (or anything u want here)</mat-label>
+        <input #date matInput placeholder="dd/mm/yyyy or anything u want" name="date" type="text" maxlength="15" required [value]="imageObjectList[lastClickedImage].imageData.date" [(ngModel)]="imageObjectList[lastClickedImage].imageData.date" (input)="updateImage(lastClickedImage)">
+        <mat-hint align="start">{{date.value.length}}/12</mat-hint>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Description</mat-label>
+        <textarea cdkTextareaAutosize #autosize="cdkTextareaAutosize" matInput placeholder="description of image" name="description" type="textarea" required [value]="imageObjectList[lastClickedImage].imageData.description" [(ngModel)]="imageObjectList[lastClickedImage].imageData.description" (input)="updateImage(lastClickedImage)"></textarea>
+      </mat-form-field>
+
+      <button mat-raised-button color="primary" (click)="updateImageInfo(lastClickedImage)">Update Info</button>
+    </form>
+  </div>
+
+</div>
 
 
  <app-full-image [style]="fullImageStyle"  *ngIf="fullImage" [image]="fullImageData"></app-full-image>

@@ -1,4 +1,4 @@
-n:host{
+:host{
   display:block;
   height: 100vh;
   width: 100vw;
@@ -31,6 +31,7 @@ n:host{
 }
 .button{
   width: 120px;
+  height: 35px;
 }
 .photoFormContainer{
   height: 75%;
@@ -70,6 +71,7 @@ n:host{
 .editPanel{
   height: calc(100vh - 45px);
   width: 25vw;
+  min-width: 450px;
   position: absolute;
   top: 45px;
   right: 0;
@@ -78,11 +80,35 @@ n:host{
   background-color: #d7d6d6;
   z-index: 4;
   flex-wrap: wrap;
-  flex-direction: column;
 }
 .buttonContainer{
   width: 100%;
-  height: 30%;
+  height: 15%;
   display: flex;
   justify-content: space-around;
+  align-items: center;
+}
+.sizeContainer{
+  width: 80%;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  box-sizing: border-box;
+}
+.sizeInputs{
+  display: flex;
+  align-items: center;
+}
+.buttonAndCheckbox{
+  width: 30%;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  align-content: center;
+  justify-content: center;
+  box-sizing: border-box;
+  margin-top: -9%;
+}
+.backToOriButton{
+  height: 35%!important;
 }

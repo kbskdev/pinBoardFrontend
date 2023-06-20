@@ -3,7 +3,7 @@
     <mat-card-title *ngIf="image.imageData.title&&image.imageData.title.length!=0">{{image.imageData.title}}</mat-card-title>
     <mat-card-subtitle *ngIf="image.imageData.date&&image.imageData.date.length!=0">{{image.imageData.date}}</mat-card-subtitle>
   </mat-card-header>
-  <img mat-card-image [src]="image.imageData.imageString" alt="image wasn't loaded">
+  <img mat-card-image *ngIf="image" [src]="image.imageData.imageString" [attr.width]="size.width" [attr.height]="size.height" alt="image wasn't loaded">
   <mat-card-content *ngIf="image.imageData.description&&image.imageData.description.length!=0">
     <p>
       {{image.imageData.description}}

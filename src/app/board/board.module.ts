@@ -6,6 +6,7 @@ import {FormsModule} from "@angular/forms";
 import {MatFileUploadModule} from "angular-material-fileupload";
 import { DragndropDirective } from './dragndrop.directive';
 import { FullImageComponent } from './full-image/full-image.component';
+import {MatCheckboxModule} from "@angular/material/checkbox";
 
 
 
@@ -18,8 +19,8 @@ import { FullImageComponent } from './full-image/full-image.component';
   exports: [
     PhotoCanvasComponent
   ],
-  imports: [
-    CommonModule,MaterialModule,FormsModule,MatFileUploadModule
-  ]
+    imports: [
+        CommonModule, MaterialModule, FormsModule, MatFileUploadModule, MatCheckboxModule
+    ]
 })
 export class BoardModule { }

@@ -51,7 +51,9 @@ export class HttpService {
   updateImageSize(comp:string,image:string,width:number,height:number){
     return this.http.patch<any>(`http://${this.domain}/api/v1/images/updateImageSize/${comp}/${image}/${width}/${height}`,{})
   }
-
+  updateImageInfo(comp:string,image:string,info:{title:string,date:string,description:string}){
+    return this.http.patch<any>(`http://${this.domain}/api/v1/images/updateImageInfo/${comp}/${image}/`,info)
+  }
   deleteImage(comp:string,image:string):Observable<any>{
     return this.http.delete<any>(`http://${this.domain}/api/v1/images/deleteImage/${comp}/${image}`)
   }
