@@ -13,5 +13,5 @@
     <input matInput placeholder="name of the board" name="compName" type="text" required [(ngModel)]="compName" >
   </mat-form-field>
   <mat-checkbox [checked]="this.public" [(ngModel)]="this.public" style="width: 80%;margin-bottom: 10px" [ngModelOptions]="{standalone: true}">Public</mat-checkbox>
-  <button mat-raised-button color="primary" type="submit" [disabled]="compform.invalid">add board</button>
+  <button mat-raised-button color="primary" type="submit" [disabled]="compform.invalid!">add board</button>
 </form>

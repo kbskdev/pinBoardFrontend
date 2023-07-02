@@ -10,7 +10,7 @@ import {Image} from "../models/image";
 })
 export class HttpService {
 
-  domain  = 'localhost:8000'
+  domain  = 'www.pinboard.pl'
 
 
 

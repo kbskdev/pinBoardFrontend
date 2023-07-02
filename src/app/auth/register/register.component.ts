@@ -22,6 +22,7 @@ export class RegisterComponent implements OnInit {
     ).subscribe(data=>{
       localStorage.setItem('user',data.data.username)
       this.auth.login(this.username,this.password).subscribe(data=>{
+        localStorage.setItem('userId',data.data._id)
         localStorage.setItem('token',data.token)
         this.loggedCheck.emit()
       })

@@ -12,6 +12,6 @@
 
   </mat-form-field>
 
-  <button mat-raised-button color="primary" style="margin-left: 50px;margin-right: 50px" type="submit" [disabled]="registerForm.invalid">Register</button>
+  <button mat-raised-button color="primary" style="margin-left: 50px;margin-right: 50px" type="submit" [disabled]="registerForm.invalid!">Register</button>
   <mat-error *ngIf="registerError">{{registerError}}</mat-error>
 </form>

@@ -11,7 +11,7 @@ export class AuthService {
 
   constructor(private http:HttpClient) { }
 
-  domain  = 'localhost:8000'
+  domain  = 'www.pinboard.pl'
 
   login(username:string,password:string):Observable<LoginResponse>{
     return this.http.post<LoginResponse>(`http://${this.domain}/api/v1/users/login/`,{username:username,password:password})
