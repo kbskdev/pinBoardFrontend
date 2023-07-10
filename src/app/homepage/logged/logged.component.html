@@ -2,9 +2,14 @@
 <p style="font-size: 30px;position: absolute;top:10%">Your board Mr/Mrs {{username}}:</p>
 <button style="font-size: 15px;position: absolute;top:5%" mat-raised-button color="primary" (click)="logout()">Logout</button>
 
-  <button mat-raised-button color="primary" *ngFor="let comp of compositions" (click)="goToComp(comp._id)">
-    {{comp.name}}
-  </button>
+<div class="compList">
+
+  <div class="comp" *ngFor="let comp of compositions" (click)="goToComp(comp._id)">
+    <p>{{comp.name}}</p>
+    <p>Board is {{comp.public}}</p>
+  </div>
+</div>
+
 
 <form #compform= "ngForm" class="newCompForm" (ngSubmit)="addComp()">
   <p class="formHeader">Add board</p>

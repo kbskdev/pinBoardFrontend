@@ -4,7 +4,8 @@
   display: flex;
   justify-content: space-around;
   align-items: center;
-  background-color: #c9ccc9;
+  background-color: #c0c0c0;
+  overflow: hidden;
 }
 .container{
   height: 100%;
@@ -34,11 +35,14 @@
   flex-wrap: wrap;
 }
 .text{
+
+  animation: appear 1s;
   font-size: 10vh;
   height: 70%;
   display: flex;
   align-items: center;
   overflow-wrap: break-word;
+
 }
 .footer{
   position: absolute;
@@ -49,4 +53,12 @@
   min-width: 200px;
   height:auto;
   line-height: 35px;
+}
+
+@keyframes  appear{
+  0%{
+    transform:rotatez(400deg) scale(0,0);
+
+  }
+
 }

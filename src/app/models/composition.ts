@@ -6,4 +6,5 @@ export interface Composition {
   tags:[string]
   votes:number,
   images:Image[]
+  public:string
 }

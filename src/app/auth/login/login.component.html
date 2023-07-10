@@ -1,5 +1,7 @@
+
+<p class="header">Log In</p>
 <form #loginForm="ngForm" (ngSubmit)="login()" class="form">
-  <p style="width: 100%;text-align: center;font-size: 30px">Log In</p>
+
   <mat-form-field appearance="outline">
     <mat-label>username</mat-label>
     <input matInput placeholder="username" name="username" type="text" required [(ngModel)]="username"/>
@@ -16,3 +18,4 @@
     <button mat-raised-button color="primary" style="margin-left: 15%;margin-right: 15%" type="submit" [disabled]="loginForm.invalid">Log In</button>
     <mat-error *ngIf="loginError">{{loginError}}</mat-error>
   </form>
+

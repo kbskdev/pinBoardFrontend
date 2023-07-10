@@ -30,6 +30,15 @@ export class ImageTile {
         this.imageSprite.height=this.imageData.currentSize!.height
         this.imageSprite.width=this.imageData.currentSize!.width
       }
+      else {
+        setTimeout(()=>{
+          this.imageData.currentSize = {height:this.imageSprite.height,width:this.imageSprite.width}
+        },1)
+      }
+
+      if(this.imageData.originalSize==undefined){
+        this.imageData.originalSize = {height:this.imageSprite.height,width:this.imageSprite.width}
+      }
 
       this.container.sortableChildren = true
 
@@ -292,6 +301,7 @@ export class ImageTile {
     if(this.dateText)this.dateText.y = this.imageSprite.height
   }
   floorIt(){
+    console.log(this.imageData)
     this.imageSprite.width = Math.floor(this.imageSprite.width)
     this.imageSprite.height = Math.floor(this.imageSprite.height)
     this.imageData.currentSize!.height = Math.floor(this.imageData.currentSize!.height)

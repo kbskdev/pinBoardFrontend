@@ -51,7 +51,7 @@ export class PhotoCanvasComponent implements OnInit {
   @ViewChild('scale') scale:MatCheckbox;
 
   imageMoved:boolean = false
-  _imageResized:boolean = false
+  imageResized:boolean = false
   fullImage:boolean = false
   fullImageData:ImageTile
   fullImageStyle:any
@@ -115,7 +115,13 @@ export class PhotoCanvasComponent implements OnInit {
 
     this.api.addImage(this.compId,formData).subscribe(response=>{
       this.imageObjectList[this.imageObjectList.length-1].imageData._id = response.data._id
+      this.api.updateImageSize(this.compId,
+        `${this.imageObjectList[this.imageObjectList.length-1].imageData._id}.${this.imageObjectList[this.imageObjectList.length-1].imageData.extension}`,
+        this.imageObjectList[this.imageObjectList.length-1].imageSprite.width,
+        this.imageObjectList[this.imageObjectList.length-1].imageSprite.height).subscribe(x=>(console.log("l")))
     })
+
+
     this.newImage = undefined as unknown as ImageTile
     this.lastClickedImage = -1
     this.newImageInfo = {title:"",date:"",description:""}
@@ -195,20 +201,12 @@ export class PhotoCanvasComponent implements OnInit {
 
         get x() {
           this.scale = this.container.scale._x
-
-          console.log(`container X:${this.container.x}`)
-          console.log(`container Y:${this.container.y}`)
-          console.log(`window width:${(window.innerWidth/2)*((1-this.scale))+(this.container.x*this.scale)}`)
-          console.log(`window height:${(window.innerHeight/2)*((1-this.scale))+(this.container.y*this.scale)}`)
-
-          //return 0
           return ((window.innerWidth / 2)/0.95 - (this.container.x)*1.3)  * 0.05 /* (1 + (1-this.scale)/2)*/
 
         },
         get y() {
           this.scale = this.container.scale._x
 
-          //return 0
           return (((window.innerHeight-45) / 2)/0.95 - (this.container.y)*1.3) * 0.05 /*(1 + (1-this.scale)/2)*/
         }
       }
@@ -217,17 +215,14 @@ export class PhotoCanvasComponent implements OnInit {
         this.zoom -= 0.05
         this.mainContainer.scale.set(this.zoom)
 
-        // console.log(`modifierX: ${modifier.x}`)
-        // console.log(`modifierY: ${modifier.y}`)
+
 
         this.mainContainer.x += modifier.x
         this.mainContainer.y += modifier.y
       }
       else if(e.deltaY<0 && this.zoom<=1.6){
         this.zoom += 0.05
-        //
-        // console.log(`modifierX: ${modifier.x}`)
-        // console.log(`modifierY: ${modifier.y}`)
+
 
         this.mainContainer.scale.set(this.zoom)
         this.mainContainer.x -= modifier.x
@@ -236,19 +231,15 @@ export class PhotoCanvasComponent implements OnInit {
     })
 
     this.app.renderer.view.onmousedown = (e:MouseEvent) => {
-      // console.log(`mouseX:${e.clientX}, mouseY:${e.clientY}`)
-      // console.log(`width:${window.innerWidth/2}, height:${window.innerHeight/2}`)
-      // console.log(`mouse: ${e.offsetX}`)
-      // console.log(`scale: ${this.mainContainer.scale._x}`)
-      // console.log(`containerX: ${this.mainContainer.x}`)
-      // console.log(`containerY: ${this.mainContainer.y}`)
-      //this.mainContainer.scale.set(0.5,0.5)
+
+      console.log(this.cursorPosition.imageIndex)
       if (!this.fullImage) {
           if (this.cursorPosition.imageIndex!=null) {//checking if mouse was down on any image
             if (this.mode == Modes.DELETE && this.isAuthor) {//if user had deleteMode on, deleting an image
               this.deletePhoto(this.cursorPosition.imageIndex)
 
             } else  {//if deletePhotoMode was off, setting data for moving images around
+
               this.pressedImage = {
                 imageIndex: this.cursorPosition.imageIndex,
                 mouseY: e.clientY,
@@ -278,11 +269,11 @@ export class PhotoCanvasComponent implements OnInit {
       }
     }//checking if user clicked on canvas or image, deleting image if deletePhoto mode on, saving data of pressed object
     this.app.renderer.view.onmouseup = () =>{
-      console.log(this.lastClickedImage)
-      if(this.pressedImage&&!(this.pressedImage.imageIndex==this.imageObjectList.length-1&&this.newImage)){ //updating position of moved image
+      if(this.pressedImage){ //updating position of moved image
 
-        if((!this.imageMoved)&&(!this._imageResized)&&(this.cursorPosition.place>0)){
-          this.fullImage = true
+        if((!this.imageMoved)&&(!this.imageResized)&&(this.cursorPosition.place>0)){
+
+          //console.log(this.imageObjectList[this.pressedImage.imageIndex])
           this.fullImageData = this.imageObjectList[this.pressedImage.imageIndex]
 
           let fullImageSize =  {width:0,height:0}
@@ -303,7 +294,7 @@ export class PhotoCanvasComponent implements OnInit {
             fullImageSize.height = this.fullImageData.imageData.currentSize!.height
 
           }
-
+          console.log(fullImageSize.width)
           this.fullImageStyle = {
             display:'block',
             position:'absolute',
@@ -319,6 +310,7 @@ export class PhotoCanvasComponent implements OnInit {
 
             }
                                  }//style of fullImage
+          this.fullImage = true
         }else if(this.isAuthor) {
             this.api.updateImagePosition(this.compId,
               `${this.imageObjectList[this.pressedImage.imageIndex].imageData._id}.${this.imageObjectList[this.pressedImage.imageIndex].imageData.extension}`,
@@ -335,7 +327,7 @@ export class PhotoCanvasComponent implements OnInit {
       }
 
       this.imageMoved = false
-      this._imageResized = false
+      this.imageResized = false
       this.pressedImage = undefined as unknown as {imageIndex:number,mouseX:number,mouseY:number,imageX:number,imageY:number,initialWidth:number,initialHeight:number,initialX:number,initialY:number,cursorPosition:CollisionPlace}
       this.pressedCanvas = undefined as unknown as {mouseX:number,mouseY:number,canvasX:number,canvasY:number}
 
@@ -385,7 +377,7 @@ export class PhotoCanvasComponent implements OnInit {
 
             else if(this.pressedImage && this.isAuthor && this.pressedImage.cursorPosition > 1 && this.mode > 0){
               this.imageObjectList[this.pressedImage.imageIndex].resizeImage(e,{height:this.pressedImage.initialHeight,width:this.pressedImage.initialWidth},{x:this.pressedImage.initialX,y:this.pressedImage.initialY},{x:this.mainContainer.position.x,y:this.mainContainer.position.y},this.pressedImage.cursorPosition,this.mainContainer.scale._x)
-              this._imageResized = true
+              this.imageResized = true
             }
             else if(this.pressedCanvas){//moving canvas around
               this.mainContainer.x=e.clientX-this.pressedCanvas.canvasX

@@ -1,7 +1,7 @@
 <div  class="container">
   <app-logged (loggedCheck)="loggedCheck()" *ngIf="isLogged"></app-logged>
   <div *ngIf="!isLogged" class="left">
-    <app-login (loggedCheck)="loggedCheck()"></app-login>
+    <app-login style="transition-duration: 1s" (loggedCheck)="loggedCheck()"></app-login>
     <app-register (loggedCheck)="loggedCheck()"></app-register>
   </div>
 
@@ -10,7 +10,6 @@
     <div class="text">Board</div>
     <footer class="footer">
       Register or login,then create board, and add images to it!
-      Database has been cleared on: 11.03
       <br>public account: name: public, password: xyz
     </footer>
   </div>
