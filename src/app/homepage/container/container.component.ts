@@ -17,7 +17,6 @@ export class ContainerComponent implements OnInit {
   @HostListener('loggedCheck')
   loggedCheck(){
     this.isLogged = localStorage.getItem('user') != ('' || undefined)
-    console.log(localStorage)
   }
 
 

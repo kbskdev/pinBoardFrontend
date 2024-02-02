@@ -1,13 +1,39 @@
 
-<p style="font-size: 30px;position: absolute;top:10%">Your board Mr/Mrs {{username}}:</p>
-<button style="font-size: 15px;position: absolute;top:5%" mat-raised-button color="primary" (click)="logout()">Logout</button>
+<div class="userPanel">
+  <div class="username">username: {{username}}</div>
+  <button class="logoutButton" mat-raised-button color="primary" (click)="logout()">Logout</button>
+</div>
 
 <div class="compList">
+  <div class="userCompListHeader">Your Boards:</div>
 
-  <div class="comp" *ngFor="let comp of compositions" (click)="goToComp(comp._id)">
-    <p>{{comp.name}}</p>
-    <p>Board is {{comp.public}}</p>
+  <div class="tableHeader">
+    <div class="nameBracket">Name</div>
+    <div class="infoBracket">
+      <div class="publicBracket">Visibility</div>
+      <div class="votesBracket">Subs</div>
+    </div>
   </div>
+
+  <div *ngFor="let board of boards" (click)="goToComp(board._id)" class="compElement">
+    <div class="nameBracket">{{board.name}}</div>
+    <div class="infoBracket">
+      <div class="publicBracket">{{board.public}}</div>
+      <div class="votesBracket">{{board.votes}}</div>
+    </div>
+  </div>
+</div>
+
+<div class="compList">
+  <div class="userCompListHeader">Public Boards:</div>
+
+  <div class="tableHeader">
+    <div class="nameBracket">Name</div>
+  </div>
+
+    <div *ngFor="let board of publicBoards" (click)="goToComp(board.composition._id)" class="compElement">
+      <div class="nameBracket">{{board.composition.name}}</div>
+    </div>
 </div>
 
 

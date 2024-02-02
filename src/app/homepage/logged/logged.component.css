@@ -4,8 +4,8 @@
   width: 50%;
   justify-content:space-around ;
   align-items: center;
-
   flex-wrap: wrap;
+  padding-left: 50px;
 }
 .newCompForm{
   position: absolute;
@@ -26,29 +26,76 @@
   font-weight: 400;
 }
 .compList{
-  width: 60%;
-  height: auto;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
+  width: 40%;
+  height:auto;
+  min-height: 30px;
+  border: 2px solid #00336b;
+}
+
+.tableHeader{
+  color: white;
+  background-color: #06478d;
+  width: 100%;
+
+  font-size: 15px;
+  height: 20px;
+  margin: 0;
+}
+
+.compElement{
+  width: 100%;
+  padding-top: 5px;
+  font-size: 15px;
+  height: 25px;
+  margin: 0;
+  transition-duration: 0.5s;
+}
+.compElement:hover{
+  background-color: #b4b4b4;
+}
+.nameBracket{
+  width: 50%;
+  height: 15px;
+
+  box-sizing: border-box;
+  float: left;
+  text-align: center;
+}
+
+.infoBracket{
+  width: 30%;
+  height: 28px;
+
+  float: right;
+
+  padding-right: 15px;
+}
+.publicBracket{
+  height: 28px;
+  float: left;
+
 
 }
-.comp{
-  margin-bottom: 20px;
-  border-radius: 5px;
-  -webkit-box-shadow: 0px 0px 16px -5px rgba(66, 68, 90, 1);
-  -moz-box-shadow: 0px 0px 16px -5px rgba(66, 68, 90, 1);
-  box-shadow: 0px 0px 16px -5px rgba(66, 68, 90, 1);
-  background-color:rgb(40, 46, 61);
-  color: white;
+.votesBracket{
+  height: 28px;
+  float: right;
   text-align: center;
-  width: 170px;
-  height: 130px;
-  display: flex;
-  align-content: space-around;
-  flex-wrap: wrap;
-  transition-duration: 0.3s;
+  border:0px solid black;
+  box-sizing: border-box;
 }
+
+.userCompListHeader{
+  text-align: center;
+  color: white;
+  background-color: #00336b;
+  width: 100%;
+  font-size: 20px;
+  padding-top: 3px;
+  padding-bottom: 3px;
+  height: 26px;
+}
+
+
 .comp>p{
   margin: 0;
   padding: 0;
@@ -61,3 +108,25 @@
   -moz-box-shadow: 0px 0px 18px 0px rgba(66, 68, 90, 1);
   box-shadow: 0px 0px 18px 0px rgba(66, 68, 90, 1);
 }
+.userPanel {
+  width: 50vw;
+  height: 50px;
+  position: absolute;
+
+  top: 0;
+  left: 0;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.username{
+  font-size: 25px;
+  height: 35px;
+  display: flex;
+  align-items: center;
+}
+.logoutButton{
+  font-size: 18px;
+  height: 35px;
+ }

@@ -35,7 +35,6 @@ export class DragndropDirective {
     this.background = "rgba(147,147,147,0.5)";
 
     let file:File = event.dataTransfer!.files[0];
-    console.log(event.clientX)
     this.droppedFile.emit({file:file,x:event.offsetX,y:event.offsetY})
   }
 }

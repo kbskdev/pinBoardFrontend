@@ -4,13 +4,14 @@ import {HttpClient} from "@angular/common/http";
 import {CompListResponse} from "../models/comp-list-response";
 import {OneCompResponse} from "../models/one-comp-response";
 import {Image} from "../models/image";
+import {FullPublicCompList} from "../models/full-public-comp-list";
 
 @Injectable({
   providedIn: 'root'
 })
 export class HttpService {
 
-  domain  = 'www.pinboard.pl'
+  domain  = 'pinboard.pl'
 
 
 
@@ -31,6 +32,10 @@ export class HttpService {
   }
   getOneCompPublic(user:string,comp:string):Observable<OneCompResponse>{
     return this.http.get<OneCompResponse>(`http://${this.domain}/api/v1/publicImages/getOneComp/${user}/${comp}`)
+  }
+
+  getFullPublicCompList():Observable<FullPublicCompList>{
+    return this.http.get<FullPublicCompList>(`http://${this.domain}/api/v1/publicImages/getFullCompositionList/`)
   }
 
   getImagePromise(id:string,comp:string,image:string):Promise<Blob>{
@@ -59,7 +64,6 @@ export class HttpService {
   }
 
   isAuthor(comp:string):Observable<{status:boolean}>{
-    console.log("???")
     return this.http.get<{status:boolean}>(`http://${this.domain}/api/v1/users/isAuthor/${comp}`)
   }
 

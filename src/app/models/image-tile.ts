@@ -301,7 +301,6 @@ export class ImageTile {
     if(this.dateText)this.dateText.y = this.imageSprite.height
   }
   floorIt(){
-    console.log(this.imageData)
     this.imageSprite.width = Math.floor(this.imageSprite.width)
     this.imageSprite.height = Math.floor(this.imageSprite.height)
     this.imageData.currentSize!.height = Math.floor(this.imageData.currentSize!.height)

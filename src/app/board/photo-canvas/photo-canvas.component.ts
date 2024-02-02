@@ -118,7 +118,7 @@ export class PhotoCanvasComponent implements OnInit {
       this.api.updateImageSize(this.compId,
         `${this.imageObjectList[this.imageObjectList.length-1].imageData._id}.${this.imageObjectList[this.imageObjectList.length-1].imageData.extension}`,
         this.imageObjectList[this.imageObjectList.length-1].imageSprite.width,
-        this.imageObjectList[this.imageObjectList.length-1].imageSprite.height).subscribe(x=>(console.log("l")))
+        this.imageObjectList[this.imageObjectList.length-1].imageSprite.height).subscribe(x=>{})
     })
 
 
@@ -176,8 +176,9 @@ export class PhotoCanvasComponent implements OnInit {
       antialias: true,
       backgroundColor: 0xdee1e3
     })
+
     this.mainContainer = new PIXI.Container()
-    //this.mainContainer.pivot.set(-window.innerWidth/2, -window.innerHeight/2)
+
     this.app.stage.addChild(this.mainContainer)
 
     this.api.isAuthor(this.compId).subscribe(result=>{
@@ -232,7 +233,6 @@ export class PhotoCanvasComponent implements OnInit {
 
     this.app.renderer.view.onmousedown = (e:MouseEvent) => {
 
-      console.log(this.cursorPosition.imageIndex)
       if (!this.fullImage) {
           if (this.cursorPosition.imageIndex!=null) {//checking if mouse was down on any image
             if (this.mode == Modes.DELETE && this.isAuthor) {//if user had deleteMode on, deleting an image
@@ -273,7 +273,6 @@ export class PhotoCanvasComponent implements OnInit {
 
         if((!this.imageMoved)&&(!this.imageResized)&&(this.cursorPosition.place>0)){
 
-          //console.log(this.imageObjectList[this.pressedImage.imageIndex])
           this.fullImageData = this.imageObjectList[this.pressedImage.imageIndex]
 
           let fullImageSize =  {width:0,height:0}
@@ -294,7 +293,6 @@ export class PhotoCanvasComponent implements OnInit {
             fullImageSize.height = this.fullImageData.imageData.currentSize!.height
 
           }
-          console.log(fullImageSize.width)
           this.fullImageStyle = {
             display:'block',
             position:'absolute',
