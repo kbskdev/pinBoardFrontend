@@ -16,10 +16,13 @@ import {MatCheckbox} from "@angular/material/checkbox";
 })
 export class PhotoCanvasComponent implements OnInit {
 
+  isMobile:boolean = this.api.isMobile
   constructor(private el:ElementRef, private api:HttpService, private route:ActivatedRoute,private router:Router) {
     this.compId = this.route.snapshot.queryParamMap.get('id')!
     this.authorId = this.route.snapshot.queryParamMap.get('userId')!
   }
+
+
   compId:string
   authorId:string
   app:PIXI.Application

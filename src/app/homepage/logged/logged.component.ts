@@ -15,6 +15,8 @@ export class LoggedComponent implements OnInit {
 
   constructor(private api:HttpService,private router:Router) { }
 
+  isMobile = this.api.isMobile
+
   boards:Array<Composition>
   publicBoards:Array<PublicComposition>
 

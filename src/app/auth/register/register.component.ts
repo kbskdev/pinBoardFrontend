@@ -1,6 +1,7 @@
 import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {AuthService} from "../../service/auth.service";
 import {catchError, throwError} from "rxjs";
+import {HttpService} from "../../service/http.service";
 
 @Component({
   selector: 'app-register',
@@ -8,8 +9,8 @@ import {catchError, throwError} from "rxjs";
   styleUrls: ['./register.component.css']
 })
 export class RegisterComponent implements OnInit {
-  constructor(private auth:AuthService) { }
-
+  constructor(private auth:AuthService,private api:HttpService) { }
+  isMobile:boolean = this.api.isMobile
   username:string = ''
   password:string = ''
   registerError:string

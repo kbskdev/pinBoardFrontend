@@ -1,11 +1,6 @@
 :host{
   width: 100%;
   height: 100%;
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  background-color: #c0c0c0;
-  overflow: hidden;
 }
 .container{
   height: 100%;
@@ -13,6 +8,9 @@
   display: flex;
   justify-content: space-around;
   align-items: center;
+  border:0px solid black;
+  box-sizing: border-box;
+
 }
 
 .left{
@@ -25,7 +23,7 @@
   align-items: center;
   flex-wrap: wrap;
 }
-.right{
+.down{
   display: flex;
   height: 10%;
   width: 50%;
@@ -33,6 +31,17 @@
   align-items: center;
   align-content: center;
   flex-wrap: wrap;
+
+}
+ .right{
+  display: flex;
+  height: 10%;
+  width: 50%;
+  justify-content:center ;
+  align-items: center;
+  align-content: center;
+  flex-wrap: wrap;
+
 }
 .text{
 
@@ -59,6 +68,45 @@
   0%{
     transform:rotatez(400deg) scale(0,0);
 
+  }
+
+}
+@media only screen and (max-width: 600px) {
+  .container{
+    flex-wrap: wrap;
+  }
+  .text{
+    font-size: 12vw!important;
+  }
+  .footer{
+    visibility: hidden;
+  }
+  .left{
+    height: 40%;
+    width: 60%;
+  }
+  .down{
+    height: 20%;
+    width: 100%!important;
+    border:0px solid black;
+    position: relative;
+
+
+  }
+   .right{
+    height: 20%;
+    width: 100%!important;
+    border:0px solid black;
+    position: relative;
+    bottom: 30%;
+
+     color: #00336b;
+  }
+  .left{
+    width: 100vw;
+    height: 60vh;
+    min-height: 400px;
+    min-width: 0;
   }
 
 }

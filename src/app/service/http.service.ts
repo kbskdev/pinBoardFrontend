@@ -12,7 +12,7 @@ import {FullPublicCompList} from "../models/full-public-comp-list";
 export class HttpService {
 
   domain  = 'pinboard.pl'
-
+  isMobile:boolean = false
 
 
   getImagePublic(id:string,comp:string,image:string):Observable<Blob>{

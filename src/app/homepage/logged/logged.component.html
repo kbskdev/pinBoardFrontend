@@ -1,40 +1,40 @@
 
 <div class="userPanel">
   <div class="username">username: {{username}}</div>
-  <button class="logoutButton" mat-raised-button color="primary" (click)="logout()">Logout</button>
+  <button class="logoutButton" mat-raised-button color="primary" (click)="logout()">Log out</button>
 </div>
 
-<div class="compList">
-  <div class="userCompListHeader">Your Boards:</div>
+  <div class="compList">
+    <div class="userCompListHeader">Your Boards:</div>
 
-  <div class="tableHeader">
-    <div class="nameBracket">Name</div>
-    <div class="infoBracket">
-      <div class="publicBracket">Visibility</div>
-      <div class="votesBracket">Subs</div>
+    <div *ngIf="!isMobile" class="tableHeader">
+      <div class="nameBracket">Name</div>
+      <div class="infoBracket">
+        <div class="publicBracket">Visibility</div>
+
+      </div>
+    </div>
+
+    <div *ngFor="let board of boards" (click)="goToComp(board._id)" class="compElement">
+      <div class="nameBracket">{{board.name}}</div>
+      <div class="infoBracket">
+        <div class="publicBracket">{{board.public}}</div>
+
+      </div>
     </div>
   </div>
 
-  <div *ngFor="let board of boards" (click)="goToComp(board._id)" class="compElement">
-    <div class="nameBracket">{{board.name}}</div>
-    <div class="infoBracket">
-      <div class="publicBracket">{{board.public}}</div>
-      <div class="votesBracket">{{board.votes}}</div>
+  <div class="compList">
+    <div class="userCompListHeader">Public Boards:</div>
+
+    <div *ngIf="!isMobile" class="tableHeader">
+      <div class="nameBracket">Name</div>
     </div>
+
+      <div *ngFor="let board of publicBoards" (click)="goToComp(board.composition._id)" class="compElement">
+        <div class="nameBracket">{{board.composition.name}}</div>
+      </div>
   </div>
-</div>
-
-<div class="compList">
-  <div class="userCompListHeader">Public Boards:</div>
-
-  <div class="tableHeader">
-    <div class="nameBracket">Name</div>
-  </div>
-
-    <div *ngFor="let board of publicBoards" (click)="goToComp(board.composition._id)" class="compElement">
-      <div class="nameBracket">{{board.composition.name}}</div>
-    </div>
-</div>
 
 
 <form #compform= "ngForm" class="newCompForm" (ngSubmit)="addComp()">

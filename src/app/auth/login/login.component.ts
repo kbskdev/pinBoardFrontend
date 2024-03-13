@@ -1,6 +1,7 @@
 import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {AuthService} from "../../service/auth.service";
 import {catchError, throwError} from "rxjs";
+import {HttpService} from "../../service/http.service";
 
 @Component({
   selector: 'app-login',
@@ -10,11 +11,12 @@ import {catchError, throwError} from "rxjs";
 export class LoginComponent implements OnInit {
 
 
-  constructor(private auth:AuthService) { }
+  constructor(private auth:AuthService, private  api:HttpService) { }
 
   username:string = ''
   password:string = ''
   loginError:string
+  isMobile:boolean = this.api.isMobile
 
 
 

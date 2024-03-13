@@ -7,17 +7,14 @@
   background-color:rgb(40, 46, 61);
   border-radius: 3px;
   flex-wrap: wrap;
-
   -webkit-box-shadow: 0px 0px 15px -5px rgba(66, 68, 90, 1);
   -moz-box-shadow: 0px 0px 15px -5px rgba(66, 68, 90, 1);
   box-shadow: 0px 0px 15px -5px rgba(66, 68, 90, 1);
-
 
 }
 mat-form-field{
   width: 51%;
   color: gainsboro!important;
-
 }
 mat-form-field::placeholder{
   color: gainsboro!important;
@@ -25,8 +22,6 @@ mat-form-field::placeholder{
 mat-label{
   color: gainsboro!important;
 }
-
-
 input::placeholder{
   color: #8d8d8d !important;
   font-size: 13px
@@ -35,7 +30,9 @@ input::placeholder{
 ::ng-deep .mat-form-field-appearance-outline .mat-form-field-outline{
   color: rgb(110, 109, 109) !important;
 }
-
+p{
+  margin: 0;
+}
 form{
   display: flex;
   justify-content: space-evenly;
@@ -46,7 +43,6 @@ form{
   flex-direction: column;
   flex-wrap: wrap;
 }
-
 .header{
   width: 100%;
   height: 55px;
@@ -62,10 +58,54 @@ form{
   border-bottom-right-radius: 0;
 }
 
+
 @keyframes spawn-register {
   0%{
     transform: translatex(-200%);
 
   }
 
+}
+@media only screen and (max-width: 600px) {
+  :host{
+    width: 80%;
+
+  }
+  .header{
+    height: 40px;
+    font-size: 25px;
+  }
+  form{
+    display: flex;
+    justify-content: space-evenly;
+
+    align-content: space-around;
+    width: 90%;
+    height: calc(100% - 40px);
+    flex-direction: column;
+    flex-wrap: wrap;
+    border: 0px solid black;
+    box-sizing: border-box;
+  }
+  mat-form-field{
+    font-size: 12px;
+    height: 30px;
+    width: 100%;
+  }
+  .inputHolder_mobile{
+    width: 50%;
+    height: 90%;
+    display: flex;
+    justify-content: space-around;
+    flex-direction: column;
+    border:0px solid black;
+    box-sizing: border-box;
+    padding-left: 15px;
+    padding-bottom: 15px;
+  }
+  .submitButton{
+    max-width: 60px;
+
+    padding: 0;
+  }
 }

@@ -1,6 +1,6 @@
 <div class="navbar">
   <button class="button" color="primary" mat-raised-button (click)="goBack()">Go back</button>
-  <button class="button" color="primary" mat-raised-button (click)="modeChange(allModes.EDIT)">{{mode == allModes.VIEW?"EDIT BOARD":"STOP EDITING"}}</button>
+  <button *ngIf="!isMobile" class="button" color="primary" mat-raised-button (click)="modeChange(allModes.EDIT)">{{mode == allModes.VIEW?"EDIT BOARD":"STOP EDITING"}}</button>
 </div>
 <div *ngIf="!newImage && mode== allModes.ADD" (droppedFile)="readNewPhoto($event.file,$event.x,$event.y)" class="dropzone" appDragndrop>
   <div class="centered">Drop your file here!</div>
