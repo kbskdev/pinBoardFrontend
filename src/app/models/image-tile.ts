@@ -21,10 +21,8 @@ export class ImageTile {
 
   constructor(imageData:Image) {
     this.reader.addEventListener("loadend",()=>{
-
       this.imageData.imageString = this.reader.result as string
       this.imageSprite = new PIXI.Sprite(new PIXI.Texture((new PIXI.BaseTexture( this.reader.result as string))))
-
       this.imageSprite.zIndex = 0
       if(this.imageData.currentSize!=undefined){
         this.imageSprite.height=this.imageData.currentSize!.height
@@ -206,6 +204,7 @@ export class ImageTile {
     return CollisionPlace.NOT_IN
   }
 
+<<<<<<< Updated upstream
   moveImage(e:MouseEvent,modifier:{x:number,y:number},scale:number){
     let mouseX= e.clientX / scale
     let mouseY= e.clientY / scale
@@ -218,6 +217,13 @@ export class ImageTile {
     this.container.y = mouseY - modifierY
     this.imageData.position.x = mouseX - modifierX
     this.imageData.position.y = mouseY - modifierY
+=======
+  moveImage(e:MouseEvent,modifier:{x:number,y:number}){
+    this.container.x=e.clientX-modifier.x
+    this.container.y=e.clientY-modifier.y
+    this.imageData.position.x=e.clientX-modifier.x
+    this.imageData.position.y=e.clientY-modifier.y
+>>>>>>> Stashed changes
   }
 
   resizeImage(e:MouseEvent,initialSize:{height:number,width:number},initialPosition:{x:number,y:number},mapModifier:{x:number,y:number},border:CollisionPlace,scale:number){
