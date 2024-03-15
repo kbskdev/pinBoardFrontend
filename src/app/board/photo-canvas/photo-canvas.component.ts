@@ -308,8 +308,8 @@ export class PhotoCanvasComponent implements OnInit {
           this.fullImageStyle = {
             display:'block',
             position:'absolute',
-            top:`max(calc(50% - ${this.fullImageData.imageSprite.height/2}px), 15%)`,
-            left:`max(calc(50% - ${this.fullImageData.imageSprite.width/2}px), 15%)`,
+            top:`calc(50% - ${this.fullImageData.imageSprite.height/2}px)`,
+            left:`calc(50% - ${this.fullImageData.imageSprite.width/2}px)`,
             width:`${fullImageSize.width}px`,
             height:`${fullImageSize.height}px`,
             maxWidth:'70%!important',

@@ -12,6 +12,18 @@
 
     </mat-form-field>
     </div>
+
+  <mat-form-field *ngIf="!isMobile" appearance="outline">
+    <mat-label>username</mat-label>
+    <input matInput placeholder="username" name="username" type="text" required [(ngModel)]="username"/>
+  </mat-form-field>
+
+  <mat-form-field *ngIf="!isMobile" appearance="outline">
+    <mat-label>password</mat-label>
+    <input matInput placeholder="password" name="title" type="password" required [(ngModel)]="password"/>
+
+  </mat-form-field>
+
     <button class="submitButton" mat-raised-button color="primary" style="margin-left: 15%;margin-right: 15%" type="submit" [disabled]="loginForm.invalid!">Log In</button>
     <mat-error *ngIf="loginError">{{loginError}}</mat-error>
 </form>

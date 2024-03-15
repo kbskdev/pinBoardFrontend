@@ -3,3 +3,22 @@
   -moz-box-shadow: 0px 0px 0px 10000px rgba(0, 0, 0, 0.3);
   box-shadow: 0px 0px 0px 10000px rgba(0, 0, 0, 0.4);
 }
+.card{
+  -webkit-box-shadow: 0px 0px 0px 10000px rgba(0, 0, 0, 0.3);
+  -moz-box-shadow: 0px 0px 0px 10000px rgba(0, 0, 0, 0.3);
+  box-shadow: 0px 0px 0px 10000px rgba(0, 0, 0, 0.4);
+}
+
+/*.fullImage{*/
+/*  position: absolute;*/
+/*  top: 20vh;*/
+/*  left: 1000vw;*/
+/*  max-width: 40vw;*/
+/*  max-height: 60vh;*/
+/*  display: flex;*/
+/*  justify-content: center;*/
+/*  align-items: center;*/
+/*  flex-wrap: wrap;*/
+/*  background-color: burlywood;*/
+/*  overflow: hidden;*/
+/*}*/
