@@ -56,7 +56,7 @@
 .centered{
   z-index: -2;
 }
-<<<<<<< Updated upstream
+
 
 .editPanel{
   height: calc(100vh - 45px);
@@ -99,10 +99,10 @@
   box-sizing: border-box;
   margin-top: -9%;
 }
-.backToOriButton{
-  height: 35%!important;
-=======
-.fullImage{
+.backToOriButton {
+  height: 35% !important;
+}
+.fullImage {
   position: absolute;
   top: 20%;
   left: 30%;
@@ -113,6 +113,5 @@
   align-items: center;
   flex-wrap: wrap;
   background-color: burlywood;
->>>>>>> Stashed changes
 }
 

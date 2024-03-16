@@ -186,6 +186,7 @@ export class PhotoCanvasComponent implements OnInit {
 
     this.api.isAuthor(this.compId).subscribe(result=>{
       this.isAuthor = result.status
+      console.log(this.isAuthor)
       this.isAuthor?this.api.getOneComp(this.compId).subscribe(async( compData)=>{
           await this.loadImages(compData)
         }
