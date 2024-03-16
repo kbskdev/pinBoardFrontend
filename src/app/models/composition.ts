@@ -7,4 +7,5 @@ export interface Composition {
   votes:number,
   images:Image[]
   public:string
+  author:string
 }

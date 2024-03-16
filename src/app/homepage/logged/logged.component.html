@@ -31,7 +31,7 @@
       <div class="nameBracket">Name</div>
     </div>
 
-      <div *ngFor="let board of publicBoards" (click)="goToComp(board.composition._id)" class="compElement">
+      <div *ngFor="let board of publicBoards" (click)="goToComp(board.composition._id, board.composition.author)" class="compElement">
         <div class="nameBracket">{{board.composition.name}}</div>
       </div>
   </div>
