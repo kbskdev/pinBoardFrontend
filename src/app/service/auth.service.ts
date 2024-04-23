@@ -14,10 +14,10 @@ export class AuthService {
   domain  = 'pinboard.pl'
 
   login(username:string,password:string):Observable<LoginResponse>{
-    return this.http.post<LoginResponse>(`http://${this.domain}/api/v1/users/login/`,{username:username,password:password})
+    return this.http.post<LoginResponse>(`https://${this.domain}/api/v1/users/login/`,{username:username,password:password})
   }
 
   register(username:string,password:string):Observable<any>{
-    return this.http.post(`http://${this.domain}/api/v1/users/register/`,{username:username,password:password})
+    return this.http.post(`https://${this.domain}/api/v1/users/register/`,{username:username,password:password})
   }
 }
